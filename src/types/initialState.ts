@@ -1,6 +1,11 @@
-import { LoginState } from '@/app/(auth)/login/actions';
+export type SignInState = {
+  success: boolean;
+  message: string | null;
+  error: string | null;
+};
 
-export const initialState: LoginState = {
+export const initialState: SignInState = {
   success: false,
+  message: null,
   error: null,
 };
