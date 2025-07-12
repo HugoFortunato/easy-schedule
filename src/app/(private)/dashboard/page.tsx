@@ -1,3 +1,4 @@
+import RedirectToSettingsButton from '@/components/redirect-to-settings-button';
 import UserInfo from '@/components/user-info';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
@@ -14,6 +15,8 @@ export default async function Dashboard() {
   return (
     <div className="p-10">
       <UserInfo loggedUser={{ email: data.user.email }} />
+
+      <RedirectToSettingsButton />
     </div>
   );
 }

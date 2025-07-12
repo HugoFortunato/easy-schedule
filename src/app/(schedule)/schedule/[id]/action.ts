@@ -23,6 +23,17 @@ export async function doSchedule(
     return { error: 'Campos obrigatórios não preenchidos.' };
   }
 
+  const { data } = await supabase
+    .from('appointments')
+    .select('*')
+    .eq('professional_id', professional_id);
+
+  const appointmentDay = data?.map((ap) => ap.date);
+
+  if (appointmentDay?.includes(date)) {
+    return { error: 'Data indisponível. Por favor, escolha outra data.' };
+  }
+
   const { error } = await supabase.from('appointments').insert({
     professional_id,
     client_name,

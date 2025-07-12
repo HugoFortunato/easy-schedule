@@ -65,15 +65,18 @@ export default function ScheduleForm({
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
       <h1 className="text-xl font-bold">
-        Agendamento com {professionalData.name || '...'}
+        Agendamento com {professionalData?.name || '...'}
       </h1>
 
       <input type="hidden" name="professional_id" value={professionalId} />
+      <input type="hidden" name="date" value={form.selectedDate} />
 
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
-          {Object.keys(professionalData.available_days).map((day) => (
+          {Object.keys(professionalData?.available_days ?? {}).map((day) => (
             <Button
+              id="date"
+              name="date"
               key={day}
               type="button"
               variant={form.selectedWeekday === day ? 'default' : 'outline'}
@@ -82,6 +85,7 @@ export default function ScheduleForm({
                   ...prev,
                   selectedWeekday: day,
                   selectedTime: '',
+                  selectedDate: `${new Date().getFullYear()}-${day.split('/')[1]}-${day.split('/')[0]}`,
                 }));
               }}
             >
@@ -95,6 +99,7 @@ export default function ScheduleForm({
         <div className="space-y-2">
           <Label htmlFor="time">Horário</Label>
           <Select
+            name="time"
             value={form.selectedTime}
             onValueChange={(value) => handleChange('selectedTime', value)}
           >
@@ -116,7 +121,7 @@ export default function ScheduleForm({
         </div>
       )}
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label htmlFor="date">Data</Label>
         <Input
           id="date"
@@ -125,7 +130,7 @@ export default function ScheduleForm({
           value={form.selectedDate}
           onChange={(e) => handleChange('selectedDate', e.target.value)}
         />
-      </div>
+      </div> */}
 
       <div className="space-y-2">
         <Label htmlFor="client_name">Seu nome</Label>
