@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Loader } from 'lucide-react';
 
 type Weekday =
   | 'monday'
@@ -50,17 +51,19 @@ export default function ScheduleForm({
     selectedTime: '',
     selectedWeekday: '',
   });
-  const [state, formAction] = useActionState<ScheduleState, FormData>(
-    doSchedule,
-    {
-      success: false,
-      error: '',
-    }
-  );
+  const [state, formAction, isPending] = useActionState<
+    ScheduleState,
+    FormData
+  >(doSchedule, {
+    success: false,
+    error: '',
+  });
 
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  console.log(state, 'state');
 
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
@@ -155,6 +158,7 @@ export default function ScheduleForm({
       </div>
 
       <Button type="submit" className="w-full">
+        {isPending && <Loader className="animate-spin" />}
         Confirmar agendamento
       </Button>
 

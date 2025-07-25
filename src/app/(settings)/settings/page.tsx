@@ -6,5 +6,7 @@ export default async function SettingsPage() {
 
   const { data } = await supabase.auth.getUser();
 
-  return <SettingsForm professionalData={data as SupabaseUserResponse} />;
+  return (
+    <SettingsForm professionalData={data as unknown as SupabaseUserResponse} />
+  );
 }

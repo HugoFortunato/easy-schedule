@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useFormState } from 'react-dom';
+import React, { useActionState } from 'react';
 
 import { Card, CardContent, CardHeader } from './ui/card';
 import { Label } from './ui/label';
@@ -13,7 +12,7 @@ import { initialState } from '@/types/initialState';
 import { signup } from '@/app/(auth)/signup/actions';
 
 export default function SignUpForm() {
-  const [state, formAction, isPending] = useFormState(signup, initialState);
+  const [state, formAction, isPending] = useActionState(signup, initialState);
 
   return (
     <Card className="mx-auto max-w-sm w-full">
@@ -28,6 +27,15 @@ export default function SignUpForm() {
                   type="email"
                   name="email"
                   placeholder="maria@gmail.com"
+                  required
+                />
+
+                <Label htmlFor="email">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  name="username"
+                  placeholder="username"
                   required
                 />
 

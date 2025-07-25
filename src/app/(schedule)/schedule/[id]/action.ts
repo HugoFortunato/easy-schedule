@@ -14,7 +14,6 @@ export async function doSchedule(
 
   const date = formData.get('date');
   const time = formData.get('time');
-
   const client_name = formData.get('client_name');
   const client_phone = formData.get('client_phone');
   const professional_id = formData.get('professional_id');
@@ -29,8 +28,11 @@ export async function doSchedule(
     .eq('professional_id', professional_id);
 
   const appointmentDay = data?.map((ap) => ap.date);
+  const appointmentTime = data?.map((ap) => ap.time);
 
-  if (appointmentDay?.includes(date)) {
+  console.log(date, 'date');
+
+  if (appointmentDay?.includes(date) && appointmentTime?.includes(time)) {
     return { error: 'Data indisponível. Por favor, escolha outra data.' };
   }
 

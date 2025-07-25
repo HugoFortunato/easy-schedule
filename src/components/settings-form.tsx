@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { createActivity } from '@/app/(settings)/settings/action';
+import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-// 🔧 Gera os próximos 6 dias úteis (segunda a sábado)
 function getNextSixBusinessDays(): string[] {
   const result: string[] = [];
   const date = new Date();
 
   while (result.length < 6) {
-    const dayOfWeek = date.getDay(); // 0 = domingo, 6 = sábado
+    const dayOfWeek = date.getDay();
     if (dayOfWeek !== 0) {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -40,11 +41,17 @@ const TIMES = [
 export type SupabaseUserResponse = {
   user: {
     email: string;
-    // outros campos omitidos
+    user_metadata: {
+      email: string;
+      email_verified: boolean;
+      phone_verified: boolean;
+      sub: string;
+      username: string;
+    };
   };
 };
 
-type DayKey = string; // agora são datas como "14/07"
+type DayKey = string;
 type AvailableDays = Partial<Record<DayKey, string[]>>;
 
 export default function SettingsForm({
@@ -52,6 +59,9 @@ export default function SettingsForm({
 }: {
   professionalData: SupabaseUserResponse;
 }) {
+  const { push } = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const AVAILABLE_DATES = getNextSixBusinessDays();
   const [availableDays, setAvailableDays] = useState<AvailableDays>({});
 
@@ -81,57 +91,65 @@ export default function SettingsForm({
   };
 
   const handleSubmit = async () => {
-    await createActivity({
-      name: 'Renato',
-      email: professionalData.user.email,
-      available_days: availableDays as Record<string, string[]>,
+    startTransition(async () => {
+      await createActivity({
+        name: professionalData.user.user_metadata.username,
+        email: professionalData.user.email,
+        available_days: availableDays as Record<string, string[]>,
+      });
     });
+
+    push('/dashboard');
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 space-y-6">
-      <h1 className="text-xl font-bold">Crie sua disponibilidade</h1>
+    <div className="h-screen flex items-center flex-col justify-center w-full max-w-md mx-auto p-4 space-y-6">
+      <h1 className="text-4xl font-bold flex items-center justify-center whitespace-nowrap">
+        Crie sua disponibilidade semanal
+      </h1>
 
-      <div className="space-y-2">
-        <Label>Dias disponíveis</Label>
-        <div className="flex flex-wrap gap-2">
-          {AVAILABLE_DATES.map((day) => {
-            const selected = day in availableDays;
-            return (
-              <Button
-                key={day}
-                type="button"
-                variant={selected ? 'default' : 'outline'}
-                onClick={() => (selected ? removeDay(day) : addDay(day))}
-              >
-                {day}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
-
-      {Object.entries(availableDays).map(([day, times]) => (
-        <div key={day} className="space-y-2">
-          <Label>Horários para {day}</Label>
+      <div className="gap-10 w-full flex flex-col items-center justify-center">
+        <div className="space-y-2 mt-4">
+          <Label>Dias disponíveis</Label>
           <div className="flex flex-wrap gap-2">
-            {TIMES.map((time) => {
-              const selected = times?.includes(time);
+            {AVAILABLE_DATES.map((day) => {
+              const selected = day in availableDays;
               return (
                 <Button
-                  key={time}
+                  key={day}
                   type="button"
-                  size="sm"
                   variant={selected ? 'default' : 'outline'}
-                  onClick={() => toggleTime(day, time)}
+                  onClick={() => (selected ? removeDay(day) : addDay(day))}
                 >
-                  {time}
+                  {day}
                 </Button>
               );
             })}
           </div>
         </div>
-      ))}
+
+        {Object.entries(availableDays).map(([day, times]) => (
+          <div key={day} className="space-y-2">
+            <Label>Horários para {day}</Label>
+            <div className="flex flex-wrap gap-2">
+              {TIMES.map((time) => {
+                const selected = times?.includes(time);
+                return (
+                  <Button
+                    key={time}
+                    type="button"
+                    size="sm"
+                    variant={selected ? 'default' : 'outline'}
+                    onClick={() => toggleTime(day, time)}
+                  >
+                    {time}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <input
         type="hidden"
@@ -140,6 +158,7 @@ export default function SettingsForm({
       />
 
       <Button type="button" onClick={handleSubmit} className="w-full">
+        {isPending && <Loader className="animate-spin" />}
         Salvar disponibilidade
       </Button>
     </div>

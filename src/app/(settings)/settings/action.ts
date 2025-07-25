@@ -23,8 +23,6 @@ export async function createActivity({
     available_days,
   });
 
-  console.log(error, 'error');
-
   if (error) {
     return { error: 'Erro ao criar disponibilidade. Tente novamente.' };
   }
