@@ -1,61 +1,34 @@
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+// import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { createClient } from '@/utils/supabase/server';
+// import Image from 'next/image';
+import ScheduleLink from '@/components/schedule-link';
+import MySchedulesCard from '@/components/my-schedules-card';
 
 export default async function Dashboard() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
+  const activityToken = (await cookies()).get('activity-token')?.value;
+
   if (error || !data?.user) {
     redirect('/signin');
   }
 
-  const name = data?.user?.user_metadata?.username;
-
-  const { data: userInfo } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('name', name)
-    .single();
-
-  const { data: appointments } = await supabase
-    .from('appointments')
-    .select('*')
-    .eq('professional_id', userInfo?.id)
-    .order('date', { ascending: true }); // Ordena pela data
-
   return (
-    <div className="p-8 space-y-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-semibold text-center">
-        Próximos agendamentos
-      </h1>
+    <div className="p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
+        {activityToken && (
+          <div className="flex-1">
+            <ScheduleLink activityToken={activityToken} />
+          </div>
+        )}
 
-      {appointments?.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {appointments.map((appointment) => (
-            <Card key={appointment.id} className="bg-muted">
-              <CardHeader className="text-base font-medium">
-                {appointment.client_name}
-              </CardHeader>
-              <CardContent className="text-sm">
-                <p>
-                  <strong>Data:</strong>{' '}
-                  {format(new Date(appointment.date), 'dd/MM/yyyy')}
-                </p>
-                <p>
-                  <strong>Hora:</strong> {appointment.time}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-muted-foreground">
-          Nenhum agendamento encontrado.
-        </p>
-      )}
+        <MySchedulesCard />
+      </div>
     </div>
   );
 }

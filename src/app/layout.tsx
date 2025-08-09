@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`overflow-hidden ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>

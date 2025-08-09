@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { createActivity } from '@/app/(settings)/settings/action';
-import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Loader } from 'lucide-react';
+import Cookies from 'js-cookie';
+
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { createActivity } from '@/app/(settings)/settings/action';
 
 function getNextSixBusinessDays(): string[] {
   const result: string[] = [];
@@ -61,9 +63,9 @@ export default function SettingsForm({
 }) {
   const { push } = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [availableDays, setAvailableDays] = useState<AvailableDays>({});
 
   const AVAILABLE_DATES = getNextSixBusinessDays();
-  const [availableDays, setAvailableDays] = useState<AvailableDays>({});
 
   const addDay = (day: DayKey) => {
     setAvailableDays((prev) => ({
@@ -92,11 +94,13 @@ export default function SettingsForm({
 
   const handleSubmit = async () => {
     startTransition(async () => {
-      await createActivity({
+      const activityResponse = await createActivity({
         name: professionalData.user.user_metadata.username,
         email: professionalData.user.email,
         available_days: availableDays as Record<string, string[]>,
       });
+
+      Cookies.set('activity-token', activityResponse?.data?.id as string);
     });
 
     push('/dashboard');
