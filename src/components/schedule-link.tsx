@@ -10,7 +10,7 @@ interface ScheduleLinkProps {
 export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
-      `http://localhost:3000/schedule/${activityToken}`
+      `http://https://easy-schedule-beta.vercel.app/schedule/${activityToken}`
     );
   };
 
@@ -31,7 +31,7 @@ export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <div className="flex items-center justify-between gap-3">
               <code className="text-sm text-gray-700 break-all font-mono">
-                {`http://localhost:3000/schedule/${activityToken}`}
+                {`https://easy-schedule-beta.vercel.app/${activityToken}`}
               </code>
               <button
                 onClick={copyToClipboard}
