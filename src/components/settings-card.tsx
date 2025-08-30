@@ -4,22 +4,22 @@ import React from 'react';
 import { Card, CardContent } from './ui/card';
 import { useRouter } from 'next/navigation';
 
-export default function MySchedulesCard() {
+export default function SettingsCard() {
   const router = useRouter();
 
   return (
     <Card
-      onClick={() => router.push('/appointments')}
+      onClick={() => router.push('/settings')}
       className="cursor-pointer bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
     >
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              Meus Agendamentos
+              Crie seu agendamento semanal
             </h2>
             <p className="text-sm text-gray-600">
-              Visualize e gerencie todos os seus agendamentos.
+              Crie seu agendamento semanal e compartilhe com seus clientes
             </p>
           </div>
 

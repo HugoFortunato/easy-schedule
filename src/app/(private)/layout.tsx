@@ -1,4 +1,5 @@
 import { Header } from '@/components/header';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function RootLayout({
   children,
@@ -6,21 +7,14 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+
+  const user = data?.user;
+
   return (
     <>
-      <Header />
-
-      <main className="container mx-auto py-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold">
-            Bem-vindo ao <span className="text-5xl">Easy Schedule</span>
-          </h1>
-          <p className="text-muted-foreground text-2xl">
-            Gerencie seus agendamentos de forma simples e eficiente
-          </p>
-        </div>
-      </main>
-
+      <Header userAvatar={user?.user_metadata.username} />
       {children}
     </>
   );
