@@ -1,13 +1,13 @@
 import ScheduleForm from '@/components/schedule-form';
 import { createClient } from '@/utils/supabase/server';
 
-export default async function SchedulePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function SchedulePage({ params }: PageProps) {
   const supabase = await createClient();
-  const { id } = await params;
+  const { id } = (await params) as { id: string };
 
   const { data } = await supabase
     .from('professionals')
