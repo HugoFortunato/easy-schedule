@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
 
@@ -10,15 +9,20 @@ import SettingsCard from '@/components/settings-card';
 export default async function Dashboard() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  const activityToken = (await cookies()).get('activity-token')?.value;
 
-  const { data: userWeeklySchedule } = await supabase
+  const { data: professionals } = await supabase
     .from('professionals')
     .select('*');
 
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*');
+
+  const professional = professionals?.find(
+    (p) => p?.email === data?.user?.email
+  );
+
+  const userId = professional?.id;
 
   const nextAppointment = appointments?.find((appointment) => {
     const appointmentDate = new Date(appointment.date);
@@ -49,20 +53,18 @@ export default async function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {activityToken && userWeeklySchedule?.length !== 0 && (
-            <div>
-              <ScheduleLink activityToken={activityToken} />
-            </div>
-          )}
+          <div>
+            <ScheduleLink activityToken={userId || ''} />
+          </div>
 
           <div>
             <MySchedulesCard />
           </div>
 
-          <div>{!userWeeklySchedule?.length && <SettingsCard />}</div>
+          <div>{!professionals?.length && <SettingsCard />}</div>
         </div>
 
-        {activityToken && (
+        {data.user && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
               <h3 className="text-sm font-medium text-gray-500">
