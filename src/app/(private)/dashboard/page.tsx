@@ -16,8 +16,6 @@ export default async function Dashboard() {
     .from('professionals')
     .select('*');
 
-  console.log(userWeeklySchedule, ' userWeeklySchedule');
-
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*');
@@ -28,8 +26,6 @@ export default async function Dashboard() {
 
     return appointmentDate > currentDate && appointment.date;
   });
-
-  console.log(nextAppointment, 'nextAppointment');
 
   if (error || !data?.user) {
     redirect('/signin');
@@ -80,10 +76,14 @@ export default async function Dashboard() {
                 Próximo horário
               </h3>
 
-              <p className="text-2xl font-bold text-purple-600 mt-2">
-                {format(nextAppointment.date, 'dd/MM/yyyy')} {' - '}
-                {nextAppointment.time} - {nextAppointment.client_name}
-              </p>
+              {nextAppointment ? (
+                <p className="text-2xl font-bold text-purple-600 mt-2">
+                  {format(nextAppointment?.date, 'dd/MM/yyyy')} {' - '}
+                  {nextAppointment?.time} - {nextAppointment?.client_name}
+                </p>
+              ) : (
+                <p className="text-lg font-bold text-purple-600 mt-2">--</p>
+              )}
             </div>
           </div>
         )}

@@ -89,11 +89,6 @@ export default function SignInForm() {
           </form>
         </CardContent>
       </Card>
-
-      <p className="text-center text-sm text-gray-500">
-        Ao entrar, você concorda com nossos termos de serviço e política de
-        privacidade.
-      </p>
     </div>
   );
 }

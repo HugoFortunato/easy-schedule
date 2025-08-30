@@ -63,8 +63,6 @@ export default function ScheduleForm({
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  console.log(state, 'state');
-
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
       <h1 className="text-xl font-bold">
@@ -123,17 +121,6 @@ export default function ScheduleForm({
           </Select>
         </div>
       )}
-
-      {/* <div className="space-y-2">
-        <Label htmlFor="date">Data</Label>
-        <Input
-          id="date"
-          name="date"
-          type="date"
-          value={form.selectedDate}
-          onChange={(e) => handleChange('selectedDate', e.target.value)}
-        />
-      </div> */}
 
       <div className="space-y-2">
         <Label htmlFor="client_name">Seu nome</Label>

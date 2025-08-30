@@ -1,12 +1,17 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 import AppointmentsCard from '@/components/appointments-card';
+import { redirect } from 'next/navigation';
 
 export default async function Appointments() {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
 
   const name = data?.user?.user_metadata?.username;
+
+  if (error || !data?.user) {
+    redirect('/signin');
+  }
 
   const { data: userInfo } = await supabase
     .from('professionals')

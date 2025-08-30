@@ -4,7 +4,6 @@ import Image from 'next/image';
 export default async function RegisterPage() {
   return (
     <div className="flex w-screen h-screen items-center">
-      {/* Logo e branding - lado esquerdo */}
       <div className="hidden lg:flex lg:flex-1 lg:h-full lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center space-y-8 px-12">
           <Image
