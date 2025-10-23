@@ -25,15 +25,15 @@ export default async function Dashboard() {
   const userId = professional?.id;
 
   const nextAppointment = appointments?.find((appointment) => {
-    const appointmentDate = new Date(appointment.date);
-    const currentDate = new Date();
+    const professionalId = appointment.professional_id === userId;
 
-    return appointmentDate > currentDate && appointment.date;
+    return professionalId;
   });
 
   if (error || !data?.user) {
     redirect('/signin');
   }
+  console.log(professional, 'teste1');
 
   const userName =
     data.user.user_metadata?.username ||
@@ -52,17 +52,19 @@ export default async function Dashboard() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
-            <ScheduleLink activityToken={userId || ''} />
-          </div>
+        {!professional ? (
+          <SettingsCard />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <ScheduleLink activityToken={userId || ''} />
+            </div>
 
-          <div>
-            <MySchedulesCard />
+            <div>
+              <MySchedulesCard />
+            </div>
           </div>
-
-          <div>{!professionals?.length && <SettingsCard />}</div>
-        </div>
+        )}
 
         {data.user && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">

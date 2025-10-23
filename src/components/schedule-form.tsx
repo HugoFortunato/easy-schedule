@@ -4,7 +4,7 @@ import { doSchedule } from '@/app/(schedule)/schedule/[id]/action';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import React, { useActionState, useState } from 'react';
+import React, { useActionState, useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -13,6 +13,8 @@ import {
   SelectValue,
 } from './ui/select';
 import { Loader } from 'lucide-react';
+import { usePhoneMask } from '@/hooks/usePhoneMask';
+import { toast } from 'sonner';
 
 type Weekday =
   | 'monday'
@@ -44,6 +46,8 @@ export default function ScheduleForm({
   professionalId: string;
   professionalData: ProfessionalData;
 }) {
+  const phoneMask = usePhoneMask('');
+
   const [form, setForm] = useState({
     clientName: '',
     clientPhone: '',
@@ -63,6 +67,34 @@ export default function ScheduleForm({
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handlePhoneChange = (value: string) => {
+    const formattedPhone = phoneMask.handleChange(value);
+    setForm((prev) => ({ ...prev, clientPhone: formattedPhone }));
+  };
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Agendamento realizado com sucesso!', {
+        description: `Seu agendamento foi confirmado para ${form.selectedDate} às ${form.selectedTime}`,
+        duration: 5000,
+      });
+
+      setForm({
+        clientName: '',
+        clientPhone: '',
+        selectedDate: '',
+        selectedTime: '',
+        selectedWeekday: '',
+      });
+      phoneMask.setValue('');
+    } else if (state?.error) {
+      toast.error('Erro ao realizar agendamento', {
+        description: state.error,
+        duration: 5000,
+      });
+    }
+  }, [state?.success, state?.error, form.selectedDate, form.selectedTime]);
+
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
       <h1 className="text-xl font-bold">
@@ -71,6 +103,11 @@ export default function ScheduleForm({
 
       <input type="hidden" name="professional_id" value={professionalId} />
       <input type="hidden" name="date" value={form.selectedDate} />
+      <input
+        type="hidden"
+        name="client_phone"
+        value={phoneMask.getUnmaskedValue()}
+      />
 
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
@@ -137,10 +174,11 @@ export default function ScheduleForm({
         <Label htmlFor="client_phone">Telefone</Label>
         <Input
           id="client_phone"
-          name="client_phone"
           type="text"
           value={form.clientPhone}
-          onChange={(e) => handleChange('clientPhone', e.target.value)}
+          onChange={(e) => handlePhoneChange(e.target.value)}
+          placeholder="(11) 99999-9999"
+          maxLength={15}
         />
       </div>
 
