@@ -30,8 +30,6 @@ export async function doSchedule(
   const appointmentDay = data?.map((ap) => ap.date);
   const appointmentTime = data?.map((ap) => ap.time);
 
-  console.log(date, 'date');
-
   if (appointmentDay?.includes(date) && appointmentTime?.includes(time)) {
     return { error: 'Data indisponível. Por favor, escolha outra data.' };
   }
