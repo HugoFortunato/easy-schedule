@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
 import {
   Select,
   SelectContent,
@@ -86,7 +85,7 @@ export default function EditAppointmentCard({
           description: result.error || 'Tente novamente em alguns instantes.',
         });
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao atualizar horário', {
         description: 'Tente novamente em alguns instantes.',
       });

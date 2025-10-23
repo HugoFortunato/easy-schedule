@@ -93,6 +93,7 @@ export default function ScheduleForm({
         duration: 5000,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.success, state?.error, form.selectedDate, form.selectedTime]);
 
   return (

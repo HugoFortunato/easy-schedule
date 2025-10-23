@@ -7,7 +7,15 @@ import { createClient } from '@/utils/supabase/client';
 
 import { Card, CardContent } from './ui/card';
 import EditAppointmentCard from './edit-appointment-card';
-import WhatsAppButton from './whatsapp-button';
+
+interface Appointment {
+  id: string;
+  client_name: string;
+  client_phone: string;
+  date: string;
+  time: string;
+  professional_id: string;
+}
 
 function formatPhone(phone: string): string {
   if (!phone) return '';
@@ -24,7 +32,7 @@ function formatPhone(phone: string): string {
 }
 
 export default function AppointmentsCard() {
-  const [appointments, setAppointments] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAppointments = async () => {
