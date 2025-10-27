@@ -17,6 +17,7 @@ export async function doSchedule(
   const client_name = formData.get('client_name');
   const client_phone = formData.get('client_phone');
   const professional_id = formData.get('professional_id');
+  const reason = formData.get('reason');
 
   if (!client_name || !date || !time) {
     return { error: 'Campos obrigatórios não preenchidos.' };
@@ -40,6 +41,7 @@ export async function doSchedule(
     client_phone,
     date,
     time,
+    reason,
   });
 
   if (error) {

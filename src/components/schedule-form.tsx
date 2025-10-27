@@ -54,6 +54,7 @@ export default function ScheduleForm({
     selectedDate: '',
     selectedTime: '',
     selectedWeekday: '',
+    reason: '',
   });
   const [state, formAction, isPending] = useActionState<
     ScheduleState,
@@ -85,7 +86,9 @@ export default function ScheduleForm({
         selectedDate: '',
         selectedTime: '',
         selectedWeekday: '',
+        reason: '',
       });
+
       phoneMask.setValue('');
     } else if (state?.error) {
       toast.error('Erro ao realizar agendamento', {
@@ -180,6 +183,18 @@ export default function ScheduleForm({
           onChange={(e) => handlePhoneChange(e.target.value)}
           placeholder="(11) 99999-9999"
           maxLength={15}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="reason">Motivo</Label>
+        <Input
+          id="reason"
+          name="reason"
+          type="text"
+          value={form.reason}
+          onChange={(e) => handleChange('reason', e.target.value)}
+          placeholder="Ex: barba e cabelo"
         />
       </div>
 

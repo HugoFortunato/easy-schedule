@@ -21,6 +21,7 @@ interface Appointment {
   date: string;
   time: string;
   professional_id: string;
+  reason?: string;
 }
 
 interface EditAppointmentCardProps {

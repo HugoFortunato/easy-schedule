@@ -24,11 +24,23 @@ export default async function Dashboard() {
 
   const userId = professional?.id;
 
-  const nextAppointment = appointments?.find((appointment) => {
-    const professionalId = appointment.professional_id === userId;
+  // Filtrar e ordenar os agendamentos futuros do profissional
+  const futureAppointments = appointments
+    ?.filter((appointment) => appointment.professional_id === userId)
+    ?.filter((appointment) => {
+      const appointmentDateTime = new Date(
+        `${appointment.date}T${appointment.time}`
+      );
+      const now = new Date();
+      return appointmentDateTime > now;
+    })
+    ?.sort((a, b) => {
+      const dateA = new Date(`${a.date}T${a.time}`);
+      const dateB = new Date(`${b.date}T${b.time}`);
+      return dateA.getTime() - dateB.getTime();
+    });
 
-    return professionalId;
-  });
+  const nextAppointment = futureAppointments?.[0];
 
   if (error || !data?.user) {
     redirect('/signin');
