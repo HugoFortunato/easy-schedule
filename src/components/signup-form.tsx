@@ -10,6 +10,7 @@ import { Loader, MessageCircle, CheckCircle } from 'lucide-react';
 import { initialState } from '@/types/initialState';
 import { signup } from '@/app/(auth)/signup/actions';
 import { redirect } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(signup, initialState);
@@ -74,10 +75,9 @@ export default function SignUpForm() {
               <div className="border border-green-200 rounded-lg p-4 bg-green-50 flex gap-3 items-start">
                 <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <AlertDescription className="text-green-700">
-                    Conta criada com sucesso! Verifique seu e-mail para
-                    confirmar.
-                  </AlertDescription>
+                  {toast.success(
+                    'Conta criada com sucesso! Verifique seu e-mail para confirmar.'
+                  )}
                 </div>
               </div>
             )}
