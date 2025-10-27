@@ -117,64 +117,66 @@ export default function SettingsForm({
   };
 
   return (
-    <div className="h-screen flex items-center flex-col justify-center w-full max-w-md mx-auto p-4 space-y-6">
-      <h1 className="text-4xl font-bold flex items-center justify-center whitespace-nowrap">
-        Crie sua disponibilidade semanal
-      </h1>
+    <div className="min-h-screen w-full max-w-md mx-auto p-4 py-8">
+      <div className="flex flex-col items-center justify-center space-y-6">
+        <h1 className="text-2xl md:text-4xl font-bold text-center">
+          Crie sua disponibilidade semanal
+        </h1>
 
-      <div className="gap-10 w-full flex flex-col items-center justify-center">
-        <div className="space-y-2 mt-4">
-          <Label>Dias disponíveis</Label>
-          <div className="flex flex-wrap gap-2">
-            {AVAILABLE_DATES.map((day) => {
-              const selected = day in availableDays;
-              return (
-                <Button
-                  key={day}
-                  type="button"
-                  variant={selected ? 'default' : 'outline'}
-                  onClick={() => (selected ? removeDay(day) : addDay(day))}
-                >
-                  {day}
-                </Button>
-              );
-            })}
-          </div>
-        </div>
-
-        {Object.entries(availableDays).map(([day, times]) => (
-          <div key={day} className="space-y-2">
-            <Label>Horários para {day}</Label>
+        <div className="gap-10 w-full flex flex-col items-center justify-center">
+          <div className="space-y-2 mt-4">
+            <Label>Dias disponíveis</Label>
             <div className="flex flex-wrap gap-2">
-              {TIMES.map((time) => {
-                const selected = times?.includes(time);
+              {AVAILABLE_DATES.map((day) => {
+                const selected = day in availableDays;
                 return (
                   <Button
-                    key={time}
+                    key={day}
                     type="button"
-                    size="sm"
                     variant={selected ? 'default' : 'outline'}
-                    onClick={() => toggleTime(day, time)}
+                    onClick={() => (selected ? removeDay(day) : addDay(day))}
                   >
-                    {time}
+                    {day}
                   </Button>
                 );
               })}
             </div>
           </div>
-        ))}
+
+          {Object.entries(availableDays).map(([day, times]) => (
+            <div key={day} className="space-y-2">
+              <Label>Horários para {day}</Label>
+              <div className="flex flex-wrap gap-2">
+                {TIMES.map((time) => {
+                  const selected = times?.includes(time);
+                  return (
+                    <Button
+                      key={time}
+                      type="button"
+                      size="sm"
+                      variant={selected ? 'default' : 'outline'}
+                      onClick={() => toggleTime(day, time)}
+                    >
+                      {time}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <input
+          type="hidden"
+          name="available_days"
+          value={JSON.stringify(availableDays)}
+        />
+
+        <Button type="button" onClick={handleSubmit} className="w-full">
+          {isPending && <Loader className="animate-spin" />}
+          Salvar disponibilidade
+        </Button>
       </div>
-
-      <input
-        type="hidden"
-        name="available_days"
-        value={JSON.stringify(availableDays)}
-      />
-
-      <Button type="button" onClick={handleSubmit} className="w-full">
-        {isPending && <Loader className="animate-spin" />}
-        Salvar disponibilidade
-      </Button>
     </div>
   );
 }
