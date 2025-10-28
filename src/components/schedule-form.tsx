@@ -166,9 +166,8 @@ export default function ScheduleForm({
                 }));
               }}
             >
-              {day.charAt(0).toUpperCase() + day.slice(1)}
-
-              <span className="text-md text-black">{getDateLabels(day)}</span>
+              {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
+              {getDateLabels(day)}
             </Button>
           ))}
         </div>
