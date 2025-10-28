@@ -1,6 +1,5 @@
 import React from 'react';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/utils/supabase/server';
+
 import Image from 'next/image';
 import ResetPasswordForm from '@/components/reset-password-form';
 
