@@ -67,7 +67,7 @@ export default async function Dashboard() {
         {!professional ? (
           <SettingsCard />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <ScheduleLink activityToken={userId || ''} />
             </div>
@@ -76,9 +76,9 @@ export default async function Dashboard() {
               <MySchedulesCard />
             </div>
 
-            <div>
+            {/* <div>
               <AvailabilityCard />
-            </div>
+            </div> */}
           </div>
         )}
 
