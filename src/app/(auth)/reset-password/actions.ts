@@ -34,6 +34,8 @@ export async function resetPassword(
     };
   }
 
+  // O Supabase cria automaticamente uma sessão temporária quando o usuário
+  // clica no link do email, então updateUser funciona sem autenticação adicional
   const { error } = await supabase.auth.updateUser({
     password: password,
   });
