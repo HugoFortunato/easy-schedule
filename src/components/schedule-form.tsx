@@ -46,6 +46,16 @@ export default function ScheduleForm({
   professionalId: string;
   professionalData: ProfessionalData;
 }) {
+  const weekDays = [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ];
+
   const phoneMask = usePhoneMask('');
 
   const [form, setForm] = useState({
@@ -63,6 +73,31 @@ export default function ScheduleForm({
     success: false,
     error: '',
   });
+
+  const getDateLabels = (day: any) => {
+    const dayNumber = day.split('/')[0];
+    const monthNumber = day.split('/')[1] - 1;
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    if (Number(monthNumber) > currentMonth) {
+      const dayOfWeek =
+        weekDays[
+          new Date(currentYear, currentMonth + 1, Number(dayNumber)).getDay()
+        ];
+
+      return dayOfWeek;
+    } else {
+      const dayOfWeek =
+        weekDays[
+          new Date(currentYear, currentMonth, Number(dayNumber)).getDay()
+        ];
+
+      return dayOfWeek;
+    }
+  };
 
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -114,7 +149,7 @@ export default function ScheduleForm({
       />
 
       <div className="space-y-2">
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {Object.keys(professionalData?.available_days ?? {}).map((day) => (
             <Button
               id="date"
@@ -132,6 +167,8 @@ export default function ScheduleForm({
               }}
             >
               {day.charAt(0).toUpperCase() + day.slice(1)}
+
+              <span className="text-md text-black">{getDateLabels(day)}</span>
             </Button>
           ))}
         </div>
