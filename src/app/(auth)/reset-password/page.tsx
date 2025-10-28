@@ -1,9 +1,13 @@
-import React from 'react';
+import { Suspense } from 'react';
 
 import Image from 'next/image';
 import ResetPasswordForm from '@/components/reset-password-form';
 
-export default async function ResetPasswordPage() {
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token: string }>;
+}) {
   return (
     <div className="flex w-screen h-screen items-center">
       <div className="hidden lg:flex lg:flex-1 lg:h-full lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-gray-900 to-black text-white">
@@ -33,7 +37,9 @@ export default async function ResetPasswordPage() {
               className="mx-auto mb-4"
             />
           </div>
-          <ResetPasswordForm />
+          <Suspense fallback={<div>Carregando...</div>}>
+            <ResetPasswordForm searchParams={searchParams} />
+          </Suspense>
         </div>
       </div>
     </div>

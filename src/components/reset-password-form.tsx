@@ -7,17 +7,19 @@ import {
   resetPassword,
   ResetPasswordState,
 } from '@/app/(auth)/reset-password/actions';
-import { useActionState } from 'react';
+import { use, useActionState } from 'react';
 import { AlertCircle } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 
 const initialState: ResetPasswordState = {
   success: false,
 };
 
-export default function ResetPasswordForm() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+export default function ResetPasswordForm({
+  searchParams,
+}: {
+  searchParams: Promise<{ token: string }>;
+}) {
+  const { token } = use(searchParams);
 
   const [state, formAction] = useActionState<ResetPasswordState, FormData>(
     resetPassword,
