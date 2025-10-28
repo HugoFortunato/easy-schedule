@@ -10,6 +10,7 @@ import { Loader, MessageCircle } from 'lucide-react';
 import { signin } from '@/app/(auth)/signin/actions';
 import { initialState } from '@/types/initialState';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignInForm() {
   const [state, formAction, isPending] = useActionState(signin, initialState);
@@ -54,6 +55,15 @@ export default function SignInForm() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="text-right">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+              >
+                Esqueceu sua senha?
+              </Link>
             </div>
 
             {state.error && (
