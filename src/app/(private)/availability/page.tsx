@@ -27,7 +27,7 @@ export default async function Availability() {
   if (typeof available_days_raw === 'string') {
     try {
       available_days = JSON.parse(available_days_raw);
-    } catch (e) {
+    } catch {
       available_days = {};
     }
   } else if (

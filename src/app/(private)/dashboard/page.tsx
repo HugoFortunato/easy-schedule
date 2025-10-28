@@ -5,7 +5,6 @@ import { createClient } from '@/utils/supabase/server';
 import ScheduleLink from '@/components/schedule-link';
 import MySchedulesCard from '@/components/my-schedules-card';
 import SettingsCard from '@/components/settings-card';
-import AvailabilityCard from '@/components/availability-card';
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -25,7 +24,6 @@ export default async function Dashboard() {
 
   const userId = professional?.id;
 
-  // Filtrar e ordenar os agendamentos futuros do profissional
   const futureAppointments = appointments
     ?.filter((appointment) => appointment.professional_id === userId)
     ?.filter((appointment) => {

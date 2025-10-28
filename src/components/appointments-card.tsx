@@ -65,6 +65,8 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
 
   useEffect(() => {
     fetchAppointments();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   if (loading) {

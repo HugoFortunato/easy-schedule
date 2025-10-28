@@ -26,7 +26,7 @@ export default function TimeSlotActions({ date, time }: TimeSlotActionsProps) {
       } else {
         toast.error(result.error || 'Erro ao remover horário');
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao remover horário');
     } finally {
       setIsDeleting(false);

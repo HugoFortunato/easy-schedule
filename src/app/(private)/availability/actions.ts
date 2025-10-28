@@ -33,13 +33,12 @@ export async function deleteTimeSlot(
 
   const available_days_raw = professional.available_days;
 
-  // Normalizar os dados - pode vir como objeto ou string JSON
   let available_days: Record<string, string[]> = {};
 
   if (typeof available_days_raw === 'string') {
     try {
       available_days = JSON.parse(available_days_raw);
-    } catch (e) {
+    } catch {
       available_days = {};
     }
   } else if (
@@ -53,7 +52,6 @@ export async function deleteTimeSlot(
 
   const updated_hours = available_hours.filter((t: string) => t !== time);
 
-  // Se não há mais horários nesse dia, remover o dia
   const updatedDays = { ...available_days };
   if (updated_hours.length === 0) {
     delete updatedDays[date];
@@ -106,13 +104,12 @@ export async function updateTimeSlot(
 
   const available_days_raw = professional.available_days;
 
-  // Normalizar os dados - pode vir como objeto ou string JSON
   let available_days: Record<string, string[]> = {};
 
   if (typeof available_days_raw === 'string') {
     try {
       available_days = JSON.parse(available_days_raw);
-    } catch (e) {
+    } catch {
       available_days = {};
     }
   } else if (
@@ -122,7 +119,6 @@ export async function updateTimeSlot(
     available_days = available_days_raw as Record<string, string[]>;
   }
 
-  // Atualizar o horário específico
   if (available_days[date]) {
     const index = available_days[date].indexOf(oldTime);
     if (index !== -1) {
