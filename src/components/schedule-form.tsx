@@ -74,9 +74,9 @@ export default function ScheduleForm({
     error: '',
   });
 
-  const getDateLabels = (day: any) => {
+  const getDateLabels = (day: string) => {
     const dayNumber = day.split('/')[0];
-    const monthNumber = day.split('/')[1] - 1;
+    const monthNumber = Number(day.split('/')[1]) - 1;
 
     const now = new Date();
     const currentMonth = now.getMonth();
