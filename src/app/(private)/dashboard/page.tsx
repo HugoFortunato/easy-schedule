@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/server';
 import ScheduleLink from '@/components/schedule-link';
 import MySchedulesCard from '@/components/my-schedules-card';
 import SettingsCard from '@/components/settings-card';
+import AvailabilityCard from '@/components/availability-card';
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -66,13 +67,17 @@ export default async function Dashboard() {
         {!professional ? (
           <SettingsCard />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
               <ScheduleLink activityToken={userId || ''} />
             </div>
 
             <div>
               <MySchedulesCard />
+            </div>
+
+            <div>
+              <AvailabilityCard />
             </div>
           </div>
         )}

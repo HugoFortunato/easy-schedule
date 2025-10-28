@@ -32,7 +32,7 @@ function formatPhone(phone: string): string {
   return phone;
 }
 
-export default function AppointmentsCard() {
+export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +53,7 @@ export default function AppointmentsCard() {
         .from('appointments')
         .select('*')
         .eq('professional_id', userInfo?.id)
-        .order('date', { ascending: true });
+        .order('date', { ascending: order === 'asc' });
 
       setAppointments(appointmentsData || []);
     } catch (error) {
@@ -65,7 +65,7 @@ export default function AppointmentsCard() {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [order]);
 
   if (loading) {
     return (

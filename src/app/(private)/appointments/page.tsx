@@ -1,7 +1,9 @@
 import React from 'react';
-import { createClient } from '@/utils/supabase/server';
-import AppointmentsCard from '@/components/appointments-card';
 import { redirect } from 'next/navigation';
+
+import { createClient } from '@/utils/supabase/server';
+
+import AppointmentsWrapper from '@/components/appointments-wrapper';
 
 export default async function Appointments() {
   const supabase = await createClient();
@@ -22,8 +24,7 @@ export default async function Appointments() {
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*')
-    .eq('professional_id', userInfo?.id)
-    .order('date', { ascending: true });
+    .eq('professional_id', userInfo?.id);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -32,13 +33,14 @@ export default async function Appointments() {
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             Meus Agendamentos
           </h1>
+
           <p className="text-gray-600">
             Visualize e gerencie todos os seus agendamentos
           </p>
         </div>
 
         {appointments && appointments.length > 0 ? (
-          <AppointmentsCard />
+          <AppointmentsWrapper />
         ) : (
           <div className="text-center py-12">
             <div className="max-w-md mx-auto">
