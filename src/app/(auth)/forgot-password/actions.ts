@@ -17,7 +17,7 @@ export async function requestPasswordReset(
   const email = formData.get('email') as string;
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+    redirectTo: `https://easy-schedule-beta.vercel.app/reset-password`,
   });
 
   if (error) {
