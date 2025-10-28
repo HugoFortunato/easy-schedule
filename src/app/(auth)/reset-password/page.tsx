@@ -5,18 +5,6 @@ import Image from 'next/image';
 import ResetPasswordForm from '@/components/reset-password-form';
 
 export default async function ResetPasswordPage() {
-  const supabase = await createClient();
-
-  const {} = await supabase.auth.getUser();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect('/signin?error=expired_token');
-  }
-
   return (
     <div className="flex w-screen h-screen items-center">
       <div className="hidden lg:flex lg:flex-1 lg:h-full lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-gray-900 to-black text-white">
