@@ -98,22 +98,28 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
           key={appointment.id}
           className="w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
         >
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
-                <div className="flex items-center gap-4 mb-3">
-                  <h3 className="font-semibold text-lg text-gray-900">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3">
+                  <h3 className="font-semibold text-base sm:text-lg text-gray-900">
                     {appointment.client_name}
                   </h3>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     Agendado
                   </span>
+                  <div className="ml-auto sm:hidden">
+                    <Trash2
+                      className="w-5 h-5 text-red-500 cursor-pointer hover:text-red-700"
+                      onClick={() => deleteAppointment(appointment.id)}
+                    />
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-6 text-sm text-gray-600">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4"
+                      className="w-4 h-4 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -125,14 +131,14 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <span>
+                    <span className="truncate">
                       {format(new Date(appointment.date), 'dd/MM/yyyy')}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4"
+                      className="w-4 h-4 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -153,7 +159,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                   {appointment.reason && (
                     <div className="flex items-center gap-2">
                       <svg
-                        className="w-4 h-4"
+                        className="w-4 h-4 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -165,7 +171,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                           d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                         />
                       </svg>
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-gray-700 truncate">
                         {appointment.reason}
                       </span>
                     </div>
@@ -174,7 +180,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                   {appointment.client_phone && (
                     <div className="flex items-center gap-2">
                       <svg
-                        className="w-4 h-4"
+                        className="w-4 h-4 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -186,16 +192,20 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                           d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                         />
                       </svg>
-                      <span>{formatPhone(appointment.client_phone)}</span>
+                      <span className="truncate">
+                        {formatPhone(appointment.client_phone)}
+                      </span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <Trash2
-                className="w-5 h-5 text-red-500 cursor-pointer hover:text-red-700"
-                onClick={() => deleteAppointment(appointment.id)}
-              />
+              <div className="hidden sm:block">
+                <Trash2
+                  className="w-5 h-5 text-red-500 cursor-pointer hover:text-red-700 flex-shrink-0"
+                  onClick={() => deleteAppointment(appointment.id)}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
