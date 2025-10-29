@@ -15,6 +15,21 @@ export async function resetPassword(
 ): Promise<ResetPasswordState> {
   const supabase = await createClient();
 
+  // Verifica se há uma sessão válida
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      message:
+        'Sessão inválida. Por favor, solicite um novo link de recuperação.',
+      error:
+        'Sessão inválida. Por favor, solicite um novo link de recuperação.',
+    };
+  }
+
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
 
@@ -34,8 +49,6 @@ export async function resetPassword(
     };
   }
 
-  // O Supabase cria automaticamente uma sessão temporária quando o usuário
-  // clica no link do email, então updateUser funciona sem autenticação adicional
   const { error } = await supabase.auth.updateUser({
     password: password,
   });

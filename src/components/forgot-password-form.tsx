@@ -1,5 +1,9 @@
 'use client';
 
+import { useActionState } from 'react';
+import { AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,19 +11,19 @@ import {
   requestPasswordReset,
   ForgotPasswordState,
 } from '@/app/(auth)/forgot-password/actions';
-import { useActionState } from 'react';
-import { AlertCircle } from 'lucide-react';
-import Link from 'next/link';
 
 const initialState: ForgotPasswordState = {
   success: false,
+  isLoading: false,
 };
 
 export default function ForgotPasswordForm() {
-  const [state, formAction] = useActionState<ForgotPasswordState, FormData>(
-    requestPasswordReset,
-    initialState
-  );
+  const [state, formAction, isPending] = useActionState<
+    ForgotPasswordState,
+    FormData
+  >(requestPasswordReset, initialState);
+
+  console.log(isPending, 'isLoading');
 
   return (
     <div className="space-y-6">
@@ -60,9 +64,15 @@ export default function ForgotPasswordForm() {
           </div>
         )}
 
-        <Button type="submit" className="w-full">
-          Enviar link de recuperação
-        </Button>
+        {isPending ? (
+          <Button type="submit" className="w-full" disabled>
+            Enviando...
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full">
+            Enviar link de recuperação
+          </Button>
+        )}
       </form>
 
       <div className="text-center text-sm text-gray-600">

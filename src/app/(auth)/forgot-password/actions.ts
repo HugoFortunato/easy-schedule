@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 
 export type ForgotPasswordState = {
   success: boolean;
+  isLoading: boolean;
   message?: string;
   error?: string;
 };
@@ -16,8 +17,12 @@ export async function requestPasswordReset(
 
   const email = formData.get('email') as string;
 
+  // Usa a URL base do ambiente (produção ou desenvolvimento)
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://easy-schedule-beta.vercel.app';
+
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `https://easy-schedule-beta.vercel.app/reset-password`,
+    redirectTo: `${baseUrl}/auth/callback`,
   });
 
   if (error) {
@@ -25,11 +30,13 @@ export async function requestPasswordReset(
       success: false,
       message: error.message,
       error: error.message,
+      isLoading: false,
     };
   }
 
   return {
     success: true,
+    isLoading: false,
     message: 'Verifique seu e-mail para o link de redefinição de senha.',
   };
 }

@@ -33,12 +33,12 @@ function formatPhone(phone: string): string {
 }
 
 export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
+  const supabase = createClient();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAppointments = async () => {
     try {
-      const supabase = createClient();
       const { data } = await supabase.auth.getUser();
 
       const name = data?.user?.user_metadata?.username;
@@ -60,6 +60,16 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
       console.error('Erro ao carregar agendamentos:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteAppointment = async (appointmentId: string) => {
+    try {
+      await supabase.from('appointments').delete().eq('id', appointmentId);
+
+      fetchAppointments();
+    } catch (error) {
+      console.error('Erro ao deletar agendamento:', error);
     }
   };
 
@@ -89,7 +99,10 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div className="flex-1">
+              <div
+                className="flex-1"
+                onClick={() => deleteAppointment(appointment.id)}
+              >
                 <div className="flex items-center gap-4 mb-3">
                   <h3 className="font-semibold text-lg text-gray-900">
                     {appointment.client_name}

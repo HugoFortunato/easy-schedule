@@ -7,34 +7,20 @@ import {
   resetPassword,
   ResetPasswordState,
 } from '@/app/(auth)/reset-password/actions';
-import { use, useActionState } from 'react';
+import { useActionState } from 'react';
 import { AlertCircle } from 'lucide-react';
 
 const initialState: ResetPasswordState = {
   success: false,
 };
 
-export default function ResetPasswordForm({
-  searchParams,
-}: {
+export default function ResetPasswordForm({}: {
   searchParams: Promise<{ token: string }>;
 }) {
-  const { token } = use(searchParams);
-
   const [state, formAction] = useActionState<ResetPasswordState, FormData>(
     resetPassword,
     initialState
   );
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!token) return alert('Token inválido');
-
-    const formData = new FormData(e.currentTarget);
-    formData.append('token', token);
-
-    formAction(formData);
-  };
 
   return (
     <div className="space-y-6">
@@ -47,7 +33,7 @@ export default function ResetPasswordForm({
         </p>
       </div>
 
-      <form action={formAction} onSubmit={handleSubmit} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <div>
           <Label htmlFor="password">Nova senha</Label>
           <Input
