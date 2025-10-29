@@ -37,9 +37,8 @@ export default async function ResetPasswordPage({
               className="mx-auto mb-4"
             />
           </div>
-          <Suspense fallback={<div>Carregando...</div>}>
-            <ResetPasswordForm searchParams={searchParams} />
-          </Suspense>
+
+          <ResetPasswordForm />
         </div>
       </div>
     </div>

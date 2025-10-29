@@ -23,8 +23,6 @@ export default function ForgotPasswordForm() {
     FormData
   >(requestPasswordReset, initialState);
 
-  console.log(isPending, 'isLoading');
-
   return (
     <div className="space-y-6">
       <div>

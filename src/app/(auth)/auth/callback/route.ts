@@ -9,7 +9,6 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient();
 
-    // Troca o code por uma sessão válida
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
@@ -17,10 +16,8 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/signin?error=auth_error`);
     }
 
-    // Redireciona para a página de reset de senha com sessão válida
     return NextResponse.redirect(`${origin}/reset-password`);
   }
 
-  // Se não houver code, redireciona para signin
   return NextResponse.redirect(`${origin}/signin`);
 }

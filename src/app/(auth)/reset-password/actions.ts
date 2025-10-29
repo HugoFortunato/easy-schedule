@@ -15,7 +15,6 @@ export async function resetPassword(
 ): Promise<ResetPasswordState> {
   const supabase = await createClient();
 
-  // Verifica se há uma sessão válida
   const {
     data: { user },
   } = await supabase.auth.getUser();

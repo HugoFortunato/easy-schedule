@@ -14,9 +14,7 @@ const initialState: ResetPasswordState = {
   success: false,
 };
 
-export default function ResetPasswordForm({}: {
-  searchParams: Promise<{ token: string }>;
-}) {
+export default function ResetPasswordForm() {
   const [state, formAction] = useActionState<ResetPasswordState, FormData>(
     resetPassword,
     initialState
