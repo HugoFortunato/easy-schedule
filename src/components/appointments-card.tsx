@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { Trash2 } from 'lucide-react';
 
 import { createClient } from '@/utils/supabase/client';
 
@@ -99,10 +100,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div
-                className="flex-1"
-                onClick={() => deleteAppointment(appointment.id)}
-              >
+              <div className="flex-1">
                 <div className="flex items-center gap-4 mb-3">
                   <h3 className="font-semibold text-lg text-gray-900">
                     {appointment.client_name}
@@ -193,6 +191,11 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                   )}
                 </div>
               </div>
+
+              <Trash2
+                className="w-5 h-5 text-red-500 cursor-pointer hover:text-red-700"
+                onClick={() => deleteAppointment(appointment.id)}
+              />
             </div>
           </CardContent>
         </Card>

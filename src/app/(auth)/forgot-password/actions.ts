@@ -17,7 +17,6 @@ export async function requestPasswordReset(
 
   const email = formData.get('email') as string;
 
-  // Usa a URL base do ambiente (produção ou desenvolvimento)
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://easy-schedule-beta.vercel.app';
 
