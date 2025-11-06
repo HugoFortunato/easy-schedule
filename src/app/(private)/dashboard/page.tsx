@@ -9,8 +9,6 @@ import SettingsCard from '@/components/settings-card';
 export default async function Dashboard() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  const { data: updateData, error: updateError } =
-    await supabase.auth.updateUser({ phone: '+5511989333434' });
 
   const { data: professionals } = await supabase
     .from('professionals')
