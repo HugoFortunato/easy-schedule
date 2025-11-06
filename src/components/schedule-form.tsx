@@ -99,6 +99,35 @@ export default function ScheduleForm({
     }
   };
 
+  const isFutureOrTodayDate = (day: string) => {
+    const [dayNumber, monthNumber] = day.split('/').map(Number);
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    if (monthNumber - 1 > currentMonth) {
+      return true;
+    }
+
+    if (monthNumber - 1 === currentMonth) {
+      const dateToCheck = new Date(currentYear, monthNumber - 1, dayNumber);
+      return dateToCheck >= today;
+    }
+
+    if (
+      monthNumber - 1 < currentMonth &&
+      currentMonth >= 10 &&
+      monthNumber <= 3
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -150,26 +179,28 @@ export default function ScheduleForm({
 
       <div className="space-y-2">
         <div className="grid grid-cols-2 gap-2">
-          {Object.keys(professionalData?.available_days ?? {}).map((day) => (
-            <Button
-              id="date"
-              name="date"
-              key={day}
-              type="button"
-              variant={form.selectedWeekday === day ? 'default' : 'outline'}
-              onClick={() => {
-                setForm((prev) => ({
-                  ...prev,
-                  selectedWeekday: day,
-                  selectedTime: '',
-                  selectedDate: `${new Date().getFullYear()}-${day.split('/')[1]}-${day.split('/')[0]}`,
-                }));
-              }}
-            >
-              {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
-              {getDateLabels(day)}
-            </Button>
-          ))}
+          {Object.keys(professionalData?.available_days ?? {})
+            .filter((day) => isFutureOrTodayDate(day))
+            .map((day) => (
+              <Button
+                id="date"
+                name="date"
+                key={day}
+                type="button"
+                variant={form.selectedWeekday === day ? 'default' : 'outline'}
+                onClick={() => {
+                  setForm((prev) => ({
+                    ...prev,
+                    selectedWeekday: day,
+                    selectedTime: '',
+                    selectedDate: `${new Date().getFullYear()}-${day.split('/')[1]}-${day.split('/')[0]}`,
+                  }));
+                }}
+              >
+                {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
+                {getDateLabels(day)}
+              </Button>
+            ))}
         </div>
       </div>
 
