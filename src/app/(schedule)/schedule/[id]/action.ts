@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 
 export type ScheduleState =
-  | { success: true; error?: undefined }
+  | { success: true; error?: undefined; whatsappUrl?: string }
   | { success?: false; error: string };
 
 export async function doSchedule(
@@ -12,12 +12,12 @@ export async function doSchedule(
 ): Promise<ScheduleState> {
   const supabase = await createClient();
 
-  const date = formData.get('date');
-  const time = formData.get('time');
-  const client_name = formData.get('client_name');
-  const client_phone = formData.get('client_phone');
-  const professional_id = formData.get('professional_id');
-  const reason = formData.get('reason');
+  const date = formData.get('date') as string;
+  const time = formData.get('time') as string;
+  const client_name = formData.get('client_name') as string;
+  const client_phone = formData.get('client_phone') as string;
+  const professional_id = formData.get('professional_id') as string;
+  const reason = formData.get('reason') as string;
 
   if (!client_name || !date || !time) {
     return { error: 'Campos obrigatórios não preenchidos.' };
@@ -48,5 +48,20 @@ export async function doSchedule(
     return { error: 'Erro ao agendar. Tente novamente.' };
   }
 
-  return { success: true };
+  // Formata a data para exibição (dd/MM)
+  const dateObj = new Date(date);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const formattedDate = `${day}/${month}`;
+
+  // Monta a mensagem para WhatsApp
+  const message = `Olá! Estou agendando meu horário para o dia ${formattedDate} às ${time}.${reason ? ` Motivo: ${reason}` : ''}`;
+
+  // Número do profissional (sem espaços e caracteres especiais)
+  const professionalPhone = '5511989333434';
+
+  // Cria URL do WhatsApp
+  const whatsappUrl = `https://wa.me/${professionalPhone}?text=${encodeURIComponent(message)}`;
+
+  return { success: true, whatsappUrl };
 }

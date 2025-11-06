@@ -36,7 +36,7 @@ interface ProfessionalData {
 }
 
 type ScheduleState =
-  | { success: true; error?: undefined }
+  | { success: true; error?: undefined; whatsappUrl?: string }
   | { success?: false; error: string };
 
 export default function ScheduleForm({
@@ -143,6 +143,11 @@ export default function ScheduleForm({
         description: `Seu agendamento foi confirmado para ${form.selectedDate} às ${form.selectedTime}`,
         duration: 5000,
       });
+
+      // Abre o WhatsApp automaticamente com a mensagem
+      if (state?.whatsappUrl) {
+        window.open(state.whatsappUrl, '_blank');
+      }
 
       setForm({
         clientName: '',
