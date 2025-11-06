@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { format, parseISO } from 'date-fns';
 
 import {
   Select,
@@ -102,9 +103,7 @@ export default function EditAppointmentCard({
 
   const handleWhatsAppClick = () => {
     const phoneNumber = appointment.client_phone.replace(/\D/g, '');
-    const formattedDate = new Date(appointment.date).toLocaleDateString(
-      'pt-BR'
-    );
+    const formattedDate = format(parseISO(appointment.date), 'dd/MM/yyyy');
     const message = `Olá ${appointment.client_name}! 👋\n\nSeu agendamento foi alterado:\n📅 Data: ${formattedDate}\n🕐 Novo horário: ${editedTime}\n\nPor favor, confirme se este novo horário está adequado para você.\n\nObrigado! 😊`;
     const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');

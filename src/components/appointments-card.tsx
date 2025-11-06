@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Trash2 } from 'lucide-react';
 
 import { createClient } from '@/utils/supabase/client';
@@ -132,7 +132,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                       />
                     </svg>
                     <span className="truncate">
-                      {format(new Date(appointment.date), 'dd/MM/yyyy')}
+                      {format(parseISO(appointment.date), 'dd/MM/yyyy')}
                     </span>
                   </div>
 
