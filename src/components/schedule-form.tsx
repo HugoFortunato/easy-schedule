@@ -15,6 +15,7 @@ import {
 import { Loader } from 'lucide-react';
 import { usePhoneMask } from '@/hooks/usePhoneMask';
 import { toast } from 'sonner';
+import { createClient } from '@/utils/supabase/client';
 
 type Weekday =
   | 'monday'
@@ -57,6 +58,7 @@ export default function ScheduleForm({
   ];
 
   const phoneMask = usePhoneMask('');
+  const supabase = createClient();
 
   const [form, setForm] = useState({
     clientName: '',
@@ -66,6 +68,7 @@ export default function ScheduleForm({
     selectedWeekday: '',
     reason: '',
   });
+  const [occupiedTimes, setOccupiedTimes] = useState<string[]>([]);
   const [state, formAction, isPending] = useActionState<
     ScheduleState,
     FormData
@@ -128,6 +131,23 @@ export default function ScheduleForm({
     return false;
   };
 
+  const fetchOccupiedTimes = async (date: string) => {
+    try {
+      const { data } = await supabase
+        .from('appointments')
+        .select('time')
+        .eq('professional_id', professionalId)
+        .eq('date', date);
+
+      if (data) {
+        const times = data.map((appointment) => appointment.time);
+        setOccupiedTimes(times);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar horários ocupados:', error);
+    }
+  };
+
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -157,6 +177,7 @@ export default function ScheduleForm({
         selectedWeekday: '',
         reason: '',
       });
+      setOccupiedTimes([]);
 
       phoneMask.setValue('');
     } else if (state?.error) {
@@ -194,12 +215,15 @@ export default function ScheduleForm({
                 type="button"
                 variant={form.selectedWeekday === day ? 'default' : 'outline'}
                 onClick={() => {
+                  const formattedDate = `${new Date().getFullYear()}-${day.split('/')[1].padStart(2, '0')}-${day.split('/')[0].padStart(2, '0')}`;
                   setForm((prev) => ({
                     ...prev,
                     selectedWeekday: day,
                     selectedTime: '',
-                    selectedDate: `${new Date().getFullYear()}-${day.split('/')[1]}-${day.split('/')[0]}`,
+                    selectedDate: formattedDate,
                   }));
+                  // Busca os horários ocupados para esta data
+                  fetchOccupiedTimes(formattedDate);
                 }}
               >
                 {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
@@ -225,13 +249,24 @@ export default function ScheduleForm({
                 professionalData?.available_days?.[
                   form.selectedWeekday as Weekday
                 ] || []
-              ).map((time) => (
-                <SelectItem key={time} value={time}>
-                  {time}
-                </SelectItem>
-              ))}
+              )
+                .filter((time) => !occupiedTimes.includes(time))
+                .map((time) => (
+                  <SelectItem key={time} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
+          {occupiedTimes.length > 0 &&
+            (professionalData?.available_days?.[
+              form.selectedWeekday as Weekday
+            ] || []
+            ).filter((time) => !occupiedTimes.includes(time)).length === 0 && (
+              <p className="text-sm text-red-500 mt-2">
+                Data indisponível. Por favor, escolha outra data.
+              </p>
+            )}
         </div>
       )}
 

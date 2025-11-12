@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 
 export type UpdateAppointmentState =
   | { success: true; error?: undefined }
@@ -49,6 +50,38 @@ export async function updateAppointment(
   if (updateError) {
     return { error: 'Erro ao atualizar agendamento. Tente novamente.' };
   }
+
+  return { success: true };
+}
+
+export async function deleteAllAppointments() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { error: 'Usuário não autenticado' };
+  }
+
+  const { data: professional } = await supabase
+    .from('professionals')
+    .select('id')
+    .eq('email', user.email)
+    .single();
+
+  if (!professional) {
+    return { error: 'Profissional não encontrado' };
+  }
+
+  await supabase
+    .from('appointments')
+    .delete()
+    .eq('professional_id', professional.id);
+
+  revalidatePath('/appointments');
 
   return { success: true };
 }

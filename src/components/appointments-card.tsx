@@ -83,7 +83,9 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="animate-pulse">
+        <div className="animate-pulse flex flex-col gap-4">
+          <div className="h-20 bg-gray-200 rounded-lg"></div>
+          <div className="h-20 bg-gray-200 rounded-lg"></div>
           <div className="h-20 bg-gray-200 rounded-lg"></div>
           <div className="h-20 bg-gray-200 rounded-lg"></div>
         </div>
