@@ -3,7 +3,7 @@
 import { Button } from './ui/button';
 import { Loader2, Trash2 } from 'lucide-react';
 import AppointmentsWrapper from './appointments-wrapper';
-import { startTransition, useActionState, useTransition } from 'react';
+import { useTransition } from 'react';
 
 interface AppointmentsContentProps {
   appointments: Appointment[];
