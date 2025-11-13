@@ -1,14 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from './ui/card';
+import { Button } from './ui/button';
 
 interface ScheduleLinkProps {
   activityToken: string;
 }
 
 export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
+  const [isCopied, setIsCopied] = useState(false);
   const copyToClipboard = () => {
+    setIsCopied(true);
+
     navigator.clipboard.writeText(
       `https://easy-schedule-beta.vercel.app/schedule/${activityToken}`
     );
@@ -30,12 +34,12 @@ export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
 
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <div className="flex items-center justify-between gap-3">
-              <code className="text-sm text-gray-700 break-all font-mono">
+              <code className="truncate max-w-[200px] md:max-w-full text-sm text-gray-700 break-all font-mono">
                 {`https://easy-schedule-beta.vercel.app/schedule/${activityToken}`}
               </code>
-              <button
+              <Button
                 onClick={copyToClipboard}
-                className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors flex-shrink-0 flex items-center gap-2"
+                className="cursor-pointer bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors flex-shrink-0 flex items-center gap-2"
               >
                 <svg
                   className="w-4 h-4"
@@ -50,8 +54,8 @@ export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
                     d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
-                Copiar
-              </button>
+                {isCopied ? 'Copiado' : 'Copiar'}
+              </Button>
             </div>
           </div>
         </div>

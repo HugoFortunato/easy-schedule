@@ -81,6 +81,8 @@ export async function deleteAllAppointments() {
     .delete()
     .eq('professional_id', professional.id);
 
+  await supabase.from('professionals').delete().eq('id', professional.id);
+
   revalidatePath('/appointments');
 
   return { success: true };
