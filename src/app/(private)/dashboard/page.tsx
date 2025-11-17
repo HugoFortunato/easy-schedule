@@ -14,32 +14,16 @@ export default async function Dashboard() {
     .from('professionals')
     .select('*');
 
-  const { data: appointments } = await supabase
-    .from('appointments')
-    .select('*');
-
   const professional = professionals?.find(
     (p) => p?.email === data?.user?.email
   );
 
+  const { data: appointments } = await supabase
+    .from('appointments')
+    .select('*')
+    .eq('professional_id', professional?.id);
+
   const userId = professional?.id;
-
-  const futureAppointments = appointments
-    ?.filter((appointment) => appointment.professional_id === userId)
-    ?.filter((appointment) => {
-      const appointmentDateTime = new Date(
-        `${appointment.date}T${appointment.time}`
-      );
-      const now = new Date();
-      return appointmentDateTime > now;
-    })
-    ?.sort((a, b) => {
-      const dateA = new Date(`${a.date}T${a.time}`);
-      const dateB = new Date(`${b.date}T${b.time}`);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-  const nextAppointment = futureAppointments?.[0];
 
   if (error || !data?.user) {
     redirect('/signin');
@@ -90,14 +74,11 @@ export default async function Dashboard() {
                 Próximo horário
               </h3>
 
-              {nextAppointment ? (
-                <p className="text-2xl font-bold text-purple-600 mt-2">
-                  {format(nextAppointment?.date, 'dd/MM/yyyy')} {' - '}
-                  {nextAppointment?.time} - {nextAppointment?.client_name}
-                </p>
-              ) : (
-                <p className="text-lg font-bold text-purple-600 mt-2">--</p>
-              )}
+              <p className="text-2xl font-bold text-purple-600 mt-2">
+                {format(appointments?.[0]?.date || '', 'dd/MM/yyyy')} {' - '}
+                {appointments?.[0]?.time || ''} -{' '}
+                {appointments?.[0]?.client_name || ''}
+              </p>
             </div>
           </div>
         )}

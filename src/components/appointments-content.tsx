@@ -27,7 +27,7 @@ export default function AppointmentsContent({
   return (
     <div>
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8 flex justify-between items-center">
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-y-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Meus Agendamentos

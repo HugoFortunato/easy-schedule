@@ -98,7 +98,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
       {appointments?.map((appointment) => (
         <Card
           key={appointment.id}
-          className="w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+          className={`w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${appointment.date < new Date().toISOString() ? 'bg-red-100 cursor-not-allowed' : ''}`}
         >
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

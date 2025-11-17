@@ -164,7 +164,6 @@ export default function ScheduleForm({
         duration: 5000,
       });
 
-      // Abre o WhatsApp automaticamente com a mensagem
       if (state?.whatsappUrl) {
         window.open(state.whatsappUrl, '_blank');
       }
@@ -187,7 +186,7 @@ export default function ScheduleForm({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state?.success, state?.error, form.selectedDate, form.selectedTime]);
+  }, [state?.success]);
 
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
@@ -259,9 +258,10 @@ export default function ScheduleForm({
             </SelectContent>
           </Select>
           {occupiedTimes.length > 0 &&
-            (professionalData?.available_days?.[
-              form.selectedWeekday as Weekday
-            ] || []
+            (
+              professionalData?.available_days?.[
+                form.selectedWeekday as Weekday
+              ] || []
             ).filter((time) => !occupiedTimes.includes(time)).length === 0 && (
               <p className="text-sm text-red-500 mt-2">
                 Data indisponível. Por favor, escolha outra data.
