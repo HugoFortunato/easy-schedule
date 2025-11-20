@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 import { createClient } from '@/utils/supabase/server';
 import ScheduleLink from '@/components/schedule-link';
@@ -18,10 +18,16 @@ export default async function Dashboard() {
     (p) => p?.email === data?.user?.email
   );
 
+  const today = new Date().toISOString().split('T')[0];
+
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*')
-    .eq('professional_id', professional?.id);
+    .eq('professional_id', professional?.id)
+    .gte('date', today)
+    .order('date', { ascending: true })
+    .order('time', { ascending: true })
+    .limit(1);
 
   const userId = professional?.id;
 
@@ -75,9 +81,17 @@ export default async function Dashboard() {
               </h3>
 
               <p className="text-2xl font-bold text-purple-600 mt-2">
-                {format(appointments?.[0]?.date || '', 'dd/MM/yyyy')} {' - '}
-                {appointments?.[0]?.time || ''} -{' '}
-                {appointments?.[0]?.client_name || ''}
+                {appointments &&
+                appointments.length > 0 &&
+                appointments[0]?.date ? (
+                  <>
+                    {format(parseISO(appointments[0].date), 'dd/MM/yyyy')}{' '}
+                    {' - '}
+                    {appointments[0].time} - {appointments[0].client_name}
+                  </>
+                ) : (
+                  'Nenhum agendamento'
+                )}
               </p>
             </div>
           </div>

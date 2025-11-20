@@ -211,8 +211,6 @@ export default function ScheduleForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.success]);
 
-  //teste
-
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
       <h1 className="text-xl font-bold">
@@ -232,28 +230,28 @@ export default function ScheduleForm({
           {Object.keys(professionalData?.available_days ?? {})
             .filter((day) => isFutureOrTodayDate(day))
             .map((day) => (
-              <Button
-                id="date"
-                name="date"
-                key={day}
-                type="button"
-                variant={form.selectedWeekday === day ? 'default' : 'outline'}
-                onClick={() => {
+            <Button
+              id="date"
+              name="date"
+              key={day}
+              type="button"
+              variant={form.selectedWeekday === day ? 'default' : 'outline'}
+              onClick={() => {
                   const formattedDate = `${new Date().getFullYear()}-${day.split('/')[1].padStart(2, '0')}-${day.split('/')[0].padStart(2, '0')}`;
-                  setForm((prev) => ({
-                    ...prev,
-                    selectedWeekday: day,
-                    selectedTime: '',
+                setForm((prev) => ({
+                  ...prev,
+                  selectedWeekday: day,
+                  selectedTime: '',
                     selectedDate: formattedDate,
-                  }));
+                }));
                   // Busca os horários ocupados para esta data
                   fetchOccupiedTimes(formattedDate);
-                }}
-              >
-                {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
-                {getDateLabels(day)}
-              </Button>
-            ))}
+              }}
+            >
+              {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
+              {getDateLabels(day)}
+            </Button>
+          ))}
         </div>
       </div>
 
@@ -277,10 +275,10 @@ export default function ScheduleForm({
                 .filter((time) => !occupiedTimes.includes(time))
                 .filter((time) => !isTimeInPast(time, form.selectedDate))
                 .map((time) => (
-                  <SelectItem key={time} value={time}>
-                    {time}
-                  </SelectItem>
-                ))}
+                <SelectItem key={time} value={time}>
+                  {time}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           {(
