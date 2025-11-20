@@ -23,16 +23,17 @@ export async function doSchedule(
     return { error: 'Campos obrigatórios não preenchidos.' };
   }
 
-  const { data } = await supabase
+  // Verifica se já existe um agendamento para esta data e horário específicos
+  const { data: existingAppointment } = await supabase
     .from('appointments')
     .select('*')
-    .eq('professional_id', professional_id);
+    .eq('professional_id', professional_id)
+    .eq('date', date)
+    .eq('time', time)
+    .single();
 
-  const appointmentDay = data?.map((ap) => ap.date);
-  const appointmentTime = data?.map((ap) => ap.time);
-
-  if (appointmentDay?.includes(date) && appointmentTime?.includes(time)) {
-    return { error: 'Data indisponível. Por favor, escolha outra data.' };
+  if (existingAppointment) {
+    return { error: 'Horário indisponível. Por favor, escolha outro horário.' };
   }
 
   const { error } = await supabase.from('appointments').insert({

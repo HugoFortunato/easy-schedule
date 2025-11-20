@@ -148,6 +148,29 @@ export default function ScheduleForm({
     }
   };
 
+  const isTimeInPast = (time: string, selectedDate: string) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const selectedDateObj = new Date(selectedDate);
+
+    // Se a data selecionada não é hoje, todos os horários são válidos
+    if (selectedDateObj.getTime() !== today.getTime()) {
+      return false;
+    }
+
+    // Se é hoje, verifica se o horário já passou
+    const [hours, minutes] = time.split(':').map(Number);
+    const timeDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hours,
+      minutes
+    );
+
+    return timeDate <= now;
+  };
+
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -250,6 +273,7 @@ export default function ScheduleForm({
                 ] || []
               )
                 .filter((time) => !occupiedTimes.includes(time))
+                .filter((time) => !isTimeInPast(time, form.selectedDate))
                 .map((time) => (
                   <SelectItem key={time} value={time}>
                     {time}
@@ -257,16 +281,20 @@ export default function ScheduleForm({
                 ))}
             </SelectContent>
           </Select>
-          {occupiedTimes.length > 0 &&
-            (
-              professionalData?.available_days?.[
-                form.selectedWeekday as Weekday
-              ] || []
-            ).filter((time) => !occupiedTimes.includes(time)).length === 0 && (
-              <p className="text-sm text-red-500 mt-2">
-                Data indisponível. Por favor, escolha outra data.
-              </p>
-            )}
+          {(
+            professionalData?.available_days?.[
+              form.selectedWeekday as Weekday
+            ] || []
+          )
+            .filter((time) => !occupiedTimes.includes(time))
+            .filter((time) => !isTimeInPast(time, form.selectedDate)).length ===
+            0 && (
+            <p className="text-sm text-red-500 mt-2">
+              {occupiedTimes.length > 0
+                ? 'Data indisponível. Por favor, escolha outra data.'
+                : 'Não há horários disponíveis para esta data.'}
+            </p>
+          )}
         </div>
       )}
 
