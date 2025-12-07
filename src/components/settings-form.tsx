@@ -15,13 +15,24 @@ function getBusinessDaysUntilNewYear(): string[] {
   // Data limite: 1º de janeiro de 2026
   const endDate = new Date('2026-01-01');
 
+  const weekDays = [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ];
+
   while (date <= endDate) {
     const dayOfWeek = date.getDay();
     // Excluir domingos (dayOfWeek === 0)
     if (dayOfWeek !== 0) {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
-      result.push(`${day}/${month}`);
+      const weekDayName = weekDays[dayOfWeek];
+      result.push(`${day}/${month} - ${weekDayName}`);
     }
     date.setDate(date.getDate() + 1);
   }
@@ -129,7 +140,7 @@ export default function SettingsForm({
         <div className="gap-10 w-full flex flex-col items-center justify-center">
           <div className="space-y-2 mt-4">
             <Label>Dias disponíveis</Label>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {AVAILABLE_DATES.map((day) => {
                 const selected = day in availableDays;
                 return (
