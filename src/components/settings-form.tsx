@@ -9,12 +9,15 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createActivity } from '@/app/(settings)/settings/action';
 
-function getNextSixBusinessDays(): string[] {
+function getBusinessDaysUntilNewYear(): string[] {
   const result: string[] = [];
   const date = new Date();
+  // Data limite: 1º de janeiro de 2026
+  const endDate = new Date('2026-01-01');
 
-  while (result.length < 6) {
+  while (date <= endDate) {
     const dayOfWeek = date.getDay();
+    // Excluir domingos (dayOfWeek === 0)
     if (dayOfWeek !== 0) {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -75,7 +78,7 @@ export default function SettingsForm({
   const [isPending, startTransition] = useTransition();
   const [availableDays, setAvailableDays] = useState<AvailableDays>({});
 
-  const AVAILABLE_DATES = getNextSixBusinessDays();
+  const AVAILABLE_DATES = getBusinessDaysUntilNewYear();
 
   const addDay = (day: DayKey) => {
     setAvailableDays((prev) => ({
