@@ -9,8 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createActivity } from '@/app/(settings)/settings/action';
 
-function getBusinessDaysUntilNewYear(): string[] {
-  const result: string[] = [];
+function getBusinessDaysUntilNewYear(): Array<{ display: string; value: string }> {
+  const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
   // Data limite: 1º de janeiro de 2026
   const endDate = new Date('2026-01-01');
@@ -32,7 +32,9 @@ function getBusinessDaysUntilNewYear(): string[] {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const weekDayName = weekDays[dayOfWeek];
-      result.push(`${day}/${month} - ${weekDayName}`);
+      const value = `${day}/${month}`;
+      const display = `${day}/${month} - ${weekDayName}`;
+      result.push({ display, value });
     }
     date.setDate(date.getDate() + 1);
   }
@@ -141,16 +143,16 @@ export default function SettingsForm({
           <div className="space-y-2 mt-4">
             <Label>Dias disponíveis</Label>
             <div className="grid grid-cols-2 gap-2">
-              {AVAILABLE_DATES.map((day) => {
-                const selected = day in availableDays;
+              {AVAILABLE_DATES.map((dayObj) => {
+                const selected = dayObj.value in availableDays;
                 return (
                   <Button
-                    key={day}
+                    key={dayObj.value}
                     type="button"
                     variant={selected ? 'default' : 'outline'}
-                    onClick={() => (selected ? removeDay(day) : addDay(day))}
+                    onClick={() => (selected ? removeDay(dayObj.value) : addDay(dayObj.value))}
                   >
-                    {day}
+                    {dayObj.display}
                   </Button>
                 );
               })}
