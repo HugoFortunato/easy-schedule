@@ -6,6 +6,9 @@ import ScheduleLink from '@/components/schedule-link';
 import MySchedulesCard from '@/components/my-schedules-card';
 import SettingsCard from '@/components/settings-card';
 
+// Força revalidação a cada requisição
+export const revalidate = 0;
+
 export default async function Dashboard() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -40,6 +43,23 @@ export default async function Dashboard() {
     data.user.email?.split('@')[0] ||
     'Usuário';
 
+  // Verifica se o professional tem available_days configurados
+  let hasAvailableDays = false;
+  
+  if (professional?.available_days) {
+    const availableDaysObj = typeof professional.available_days === 'string' 
+      ? JSON.parse(professional.available_days) 
+      : professional.available_days;
+    
+    hasAvailableDays = Object.keys(availableDaysObj).length > 0;
+  }
+
+  console.log('Dashboard Debug:', {
+    hasProfessional: !!professional,
+    availableDays: professional?.available_days,
+    hasAvailableDays,
+  });
+
   return (
     <div className="bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -52,7 +72,7 @@ export default async function Dashboard() {
           </p>
         </div>
 
-        {!professional ? (
+        {!professional || !hasAvailableDays ? (
           <SettingsCard />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -66,7 +86,7 @@ export default async function Dashboard() {
           </div>
         )}
 
-        {data.user && (
+        {data.user && hasAvailableDays && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
               <h3 className="text-sm font-medium text-gray-500">

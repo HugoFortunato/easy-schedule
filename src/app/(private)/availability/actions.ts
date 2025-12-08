@@ -69,6 +69,7 @@ export async function deleteTimeSlot(
   }
 
   revalidatePath('/availability');
+  revalidatePath('/dashboard');
 
   return { success: true };
 }
@@ -136,6 +137,7 @@ export async function updateTimeSlot(
   }
 
   revalidatePath('/availability');
+  revalidatePath('/dashboard');
 
   return { success: true };
 }
