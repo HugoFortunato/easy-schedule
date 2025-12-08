@@ -12,8 +12,8 @@ import { createActivity } from '@/app/(settings)/settings/action';
 function getBusinessDaysUntilNewYear(): Array<{ display: string; value: string }> {
   const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
-  // Data limite: 1º de janeiro de 2026
-  const endDate = new Date('2026-01-01');
+  // Data limite: 1º de janeiro de 2026 (incluindo o dia 01/01)
+  const endDate = new Date('2026-01-01T23:59:59');
 
   const weekDays = [
     'Domingo',
