@@ -188,7 +188,8 @@ export default function ScheduleForm({
       });
 
       if (state?.whatsappUrl) {
-        window.open(state.whatsappUrl, '_blank');
+        // Usa location.href para melhor compatibilidade mobile
+        window.location.href = state.whatsappUrl;
       }
 
       setForm({
