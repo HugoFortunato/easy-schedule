@@ -94,9 +94,11 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
   }
 
   const isAppointmentPast = (date: string, time: string) => {
+    // Usa o fuso horário do Brasil para garantir consistência entre dev e produção
     const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const currentTime = now.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+    const brazilDateTime = now.toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }); // Formato: "2024-12-18 16:40:00"
+    const [today, timeWithSeconds] = brazilDateTime.split(' ');
+    const currentTime = timeWithSeconds.slice(0, 5); // HH:MM
 
     if (date < today) return true;
     if (date === today && time < currentTime) return true;
