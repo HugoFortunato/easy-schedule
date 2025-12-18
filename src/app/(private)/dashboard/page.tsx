@@ -1,10 +1,10 @@
-import { redirect } from 'next/navigation';
-import { format, parseISO } from 'date-fns';
+import { redirect } from "next/navigation";
+import { format, parseISO } from "date-fns";
 
-import { createClient } from '@/utils/supabase/server';
-import ScheduleLink from '@/components/schedule-link';
-import MySchedulesCard from '@/components/my-schedules-card';
-import SettingsCard from '@/components/settings-card';
+import { createClient } from "@/utils/supabase/server";
+import ScheduleLink from "@/components/schedule-link";
+import MySchedulesCard from "@/components/my-schedules-card";
+import SettingsCard from "@/components/settings-card";
 
 // Força revalidação a cada requisição
 export const revalidate = 0;
@@ -14,47 +14,50 @@ export default async function Dashboard() {
   const { data, error } = await supabase.auth.getUser();
 
   const { data: professionals } = await supabase
-    .from('professionals')
-    .select('*');
+    .from("professionals")
+    .select("*");
 
   const professional = professionals?.find(
     (p) => p?.email === data?.user?.email
   );
 
-  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
+  const currentTime = now.toTimeString().split(" ")[0].slice(0, 5); // Formato HH:MM
 
   const { data: appointments } = await supabase
-    .from('appointments')
-    .select('*')
-    .eq('professional_id', professional?.id)
-    .gte('date', today)
-    .order('date', { ascending: true })
-    .order('time', { ascending: true })
+    .from("appointments")
+    .select("*")
+    .eq("professional_id", professional?.id)
+    .or(`date.gt.${today},and(date.eq.${today},time.gte.${currentTime})`)
+    .order("date", { ascending: true })
+    .order("time", { ascending: true })
     .limit(1);
 
   const userId = professional?.id;
 
   if (error || !data?.user) {
-    redirect('/signin');
+    redirect("/signin");
   }
 
   const userName =
     data.user.user_metadata?.username ||
-    data.user.email?.split('@')[0] ||
-    'Usuário';
+    data.user.email?.split("@")[0] ||
+    "Usuário";
 
   // Verifica se o professional tem available_days configurados
   let hasAvailableDays = false;
-  
+
   if (professional?.available_days) {
-    const availableDaysObj = typeof professional.available_days === 'string' 
-      ? JSON.parse(professional.available_days) 
-      : professional.available_days;
-    
+    const availableDaysObj =
+      typeof professional.available_days === "string"
+        ? JSON.parse(professional.available_days)
+        : professional.available_days;
+
     hasAvailableDays = Object.keys(availableDaysObj).length > 0;
   }
 
-  console.log('Dashboard Debug:', {
+  console.log("Dashboard Debug:", {
     hasProfessional: !!professional,
     availableDays: professional?.available_days,
     hasAvailableDays,
@@ -77,7 +80,7 @@ export default async function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <ScheduleLink activityToken={userId || ''} />
+              <ScheduleLink activityToken={userId || ""} />
             </div>
 
             <div>
@@ -95,8 +98,8 @@ export default async function Dashboard() {
               <p className="text-2xl font-bold text-green-600 mt-2">Ativo</p>
             </div>
 
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500">
+            <div className="w-full bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+              <h3 className="whitespace-nowrap text-sm font-medium text-gray-500">
                 Próximo horário
               </h3>
 
@@ -105,12 +108,12 @@ export default async function Dashboard() {
                 appointments.length > 0 &&
                 appointments[0]?.date ? (
                   <>
-                    {format(parseISO(appointments[0].date), 'dd/MM/yyyy')}{' '}
-                    {' - '}
+                    {format(parseISO(appointments[0].date), "dd/MM/yyyy")}{" "}
+                    {" - "}
                     {appointments[0].time} - {appointments[0].client_name}
                   </>
                 ) : (
-                  'Nenhum agendamento'
+                  "Nenhum agendamento"
                 )}
               </p>
             </div>

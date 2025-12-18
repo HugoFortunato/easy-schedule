@@ -93,12 +93,22 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
     );
   }
 
+  const isAppointmentPast = (date: string, time: string) => {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentTime = now.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+
+    if (date < today) return true;
+    if (date === today && time < currentTime) return true;
+    return false;
+  };
+
   return (
     <div className="space-y-4">
       {appointments?.map((appointment) => (
         <Card
           key={appointment.id}
-          className={`w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${appointment.date < new Date().toISOString() ? 'bg-red-100 cursor-not-allowed' : ''}`}
+          className={`w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${isAppointmentPast(appointment.date, appointment.time) ? 'bg-red-100 cursor-not-allowed' : ''}`}
         >
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
