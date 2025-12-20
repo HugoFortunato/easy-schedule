@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { format, parseISO } from 'date-fns';
-import { Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { format, parseISO } from "date-fns";
+import { Trash2 } from "lucide-react";
 
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from "@/utils/supabase/client";
 
-import { Card, CardContent } from './ui/card';
-import EditAppointmentCard from './edit-appointment-card';
+import { Card, CardContent } from "./ui/card";
+import EditAppointmentCard from "./edit-appointment-card";
+import { toast } from "sonner";
 
 interface Appointment {
   id: string;
@@ -20,9 +21,9 @@ interface Appointment {
 }
 
 function formatPhone(phone: string): string {
-  if (!phone) return '';
+  if (!phone) return "";
 
-  const numbers = phone.replace(/\D/g, '');
+  const numbers = phone.replace(/\D/g, "");
 
   if (numbers.length === 10) {
     return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
@@ -33,32 +34,45 @@ function formatPhone(phone: string): string {
   return phone;
 }
 
-export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
+export default function AppointmentsCard({
+  order,
+  currentDate,
+}: {
+  order: "asc" | "desc";
+  currentDate: string | undefined;
+}) {
+  console.log(currentDate, "currentDate");
   const supabase = createClient();
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
   const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  const today = new Date().toISOString().split("T")[0];
 
   const fetchAppointments = async () => {
+    setLoading(true);
+
     try {
       const { data } = await supabase.auth.getUser();
 
       const name = data?.user?.user_metadata?.username;
 
       const { data: userInfo } = await supabase
-        .from('professionals')
-        .select('*')
-        .eq('name', name)
+        .from("professionals")
+        .select("*")
+        .eq("name", name)
         .single();
 
       const { data: appointmentsData } = await supabase
-        .from('appointments')
-        .select('*')
-        .eq('professional_id', userInfo?.id)
-        .order('date', { ascending: order === 'asc' });
+        .from("appointments")
+        .select("*")
+        .eq("professional_id", userInfo?.id)
+        .eq("date", currentDate ?? today)
+        .order("date", { ascending: order !== "asc" });
 
       setAppointments(appointmentsData || []);
     } catch (error) {
-      console.error('Erro ao carregar agendamentos:', error);
+      console.error("Erro ao carregar agendamentos:", error);
     } finally {
       setLoading(false);
     }
@@ -66,19 +80,32 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
 
   const deleteAppointment = async (appointmentId: string) => {
     try {
-      await supabase.from('appointments').delete().eq('id', appointmentId);
+      await supabase.from("appointments").delete().eq("id", appointmentId);
 
       fetchAppointments();
-    } catch (error) {
-      console.error('Erro ao deletar agendamento:', error);
+    } catch {
+      toast.error("Erro ao deletar agendamento:");
     }
+  };
+
+  const isAppointmentPast = (date: string, time: string) => {
+    const now = new Date();
+    const brazilDateTime = now.toLocaleString("sv-SE", {
+      timeZone: "America/Sao_Paulo",
+    });
+    const [today, timeWithSeconds] = brazilDateTime.split(" ");
+    const currentTime = timeWithSeconds.slice(0, 5);
+
+    if (date < today) return true;
+    if (date === today && time < currentTime) return true;
+    return false;
   };
 
   useEffect(() => {
     fetchAppointments();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
+  }, [order, currentDate]);
 
   if (loading) {
     return (
@@ -93,24 +120,22 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
     );
   }
 
-  const isAppointmentPast = (date: string, time: string) => {
-    // Usa o fuso horário do Brasil para garantir consistência entre dev e produção
-    const now = new Date();
-    const brazilDateTime = now.toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }); // Formato: "2024-12-18 16:40:00"
-    const [today, timeWithSeconds] = brazilDateTime.split(' ');
-    const currentTime = timeWithSeconds.slice(0, 5); // HH:MM
-
-    if (date < today) return true;
-    if (date === today && time < currentTime) return true;
-    return false;
-  };
+  if (appointments?.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          Nenhum agendamento encontrado
+        </h3>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
       {appointments?.map((appointment) => (
         <Card
           key={appointment.id}
-          className={`w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${isAppointmentPast(appointment.date, appointment.time) ? 'bg-red-100 cursor-not-allowed' : ''}`}
+          className={`w-full bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${isAppointmentPast(appointment.date, appointment.time) ? "bg-red-100 cursor-not-allowed" : ""}`}
         >
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -146,7 +171,7 @@ export default function AppointmentsCard({ order }: { order: 'asc' | 'desc' }) {
                       />
                     </svg>
                     <span className="truncate">
-                      {format(parseISO(appointment.date), 'dd/MM/yyyy')}
+                      {format(parseISO(appointment.date), "dd/MM/yyyy")}
                     </span>
                   </div>
 

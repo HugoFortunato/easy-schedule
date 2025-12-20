@@ -21,13 +21,12 @@ export default async function Dashboard() {
     (p) => p?.email === data?.user?.email
   );
 
-  // Usa o fuso horário do Brasil para garantir consistência entre dev e produção
   const now = new Date();
   const brazilDateTime = now.toLocaleString("sv-SE", {
     timeZone: "America/Sao_Paulo",
-  }); // Formato: "2024-12-18 16:40:00"
+  });
   const [today, timeWithSeconds] = brazilDateTime.split(" ");
-  const currentTime = timeWithSeconds.slice(0, 5); // Formato HH:MM
+  const currentTime = timeWithSeconds.slice(0, 5);
 
   const { data: appointments } = await supabase
     .from("appointments")
@@ -49,7 +48,6 @@ export default async function Dashboard() {
     data.user.email?.split("@")[0] ||
     "Usuário";
 
-  // Verifica se o professional tem available_days configurados
   let hasAvailableDays = false;
 
   if (professional?.available_days) {
@@ -60,12 +58,6 @@ export default async function Dashboard() {
 
     hasAvailableDays = Object.keys(availableDaysObj).length > 0;
   }
-
-  console.log("Dashboard Debug:", {
-    hasProfessional: !!professional,
-    availableDays: professional?.available_days,
-    hasAvailableDays,
-  });
 
   return (
     <div className="bg-gray-50">

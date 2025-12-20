@@ -1,31 +1,81 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import AppointmentsCard from '@/components/appointments-card';
-import { ArrowUpDown } from 'lucide-react';
+import React, { useState } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ArrowUpDown, CalendarIcon } from "lucide-react";
 
-export default function AppointmentsWrapper() {
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+import AppointmentsCard from "@/components/appointments-card";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+export default function AppointmentsWrapper({
+  onDateSelect,
+  currentDate,
+}: {
+  currentDate: string | undefined;
+  onDateSelect: (date: Date | undefined) => void;
+}) {
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const toggleOrder = () => {
-    setOrder(order === 'asc' ? 'desc' : 'asc');
+    setOrder(order === "asc" ? "desc" : "asc");
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    setIsCalendarOpen(false);
+
+    if (date) {
+      onDateSelect(date);
+    }
   };
 
   return (
     <>
-      <div className="flex justify-end mb-6">
+      <div className="flex justify-end gap-2 mb-6">
+        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+          <PopoverTrigger asChild>
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
+              title="Filtrar por data"
+            >
+              <CalendarIcon className="w-5 h-5" />
+              {selectedDate ? (
+                <span className="text-sm">
+                  {format(selectedDate, "dd/MM/yyyy", { locale: ptBR })}
+                </span>
+              ) : null}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 bg-white" align="end">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+
         <button
           onClick={toggleOrder}
           className="flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
           title={
-            order === 'asc' ? 'Mais antigos primeiro' : 'Mais recentes primeiro'
+            order === "asc" ? "Mais antigos primeiro" : "Mais recentes primeiro"
           }
         >
           <ArrowUpDown className="w-5 h-5" />
         </button>
       </div>
 
-      <AppointmentsCard order={order} />
+      <AppointmentsCard order={order} currentDate={currentDate} />
     </>
   );
 }

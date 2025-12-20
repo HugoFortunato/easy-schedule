@@ -1,14 +1,10 @@
-'use client';
+"use client";
 
-import { Button } from './ui/button';
-import { Loader2, Trash2 } from 'lucide-react';
-import AppointmentsWrapper from './appointments-wrapper';
-import { useTransition } from 'react';
+import { useState, useTransition } from "react";
+import { Loader2, Trash2 } from "lucide-react";
 
-interface AppointmentsContentProps {
-  appointments: Appointment[];
-  deleteAllAppointments: () => void;
-}
+import { Button } from "./ui/button";
+import AppointmentsWrapper from "./appointments-wrapper";
 
 interface Appointment {
   id: string;
@@ -16,13 +12,30 @@ interface Appointment {
   client_phone: string;
   date: string;
   time: string;
+  professional_id: string;
+}
+
+interface AppointmentsContentProps {
+  deleteAllAppointments: () => void;
+  appointments: Appointment[];
 }
 
 export default function AppointmentsContent({
-  appointments,
   deleteAllAppointments,
+  appointments,
 }: AppointmentsContentProps) {
   const [isPending, startTransition] = useTransition();
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(
+    undefined
+  );
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!date) return;
+
+    const formattedDate = date.toISOString().split("T")[0];
+
+    setSelectedDate(formattedDate);
+  };
 
   return (
     <div>
@@ -57,7 +70,10 @@ export default function AppointmentsContent({
         </div>
 
         {appointments && appointments.length > 0 ? (
-          <AppointmentsWrapper />
+          <AppointmentsWrapper
+            onDateSelect={handleDateSelect}
+            currentDate={selectedDate}
+          />
         ) : (
           <div className="text-center py-12">
             <div className="max-w-md mx-auto">

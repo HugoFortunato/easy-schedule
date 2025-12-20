@@ -1,9 +1,9 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from "@/utils/supabase/server";
 
-import AppointmentsContent from '@/components/appointments-content';
-import { deleteAllAppointments } from './actions';
+import AppointmentsContent from "@/components/appointments-content";
+import { deleteAllAppointments } from "./actions";
 
 export default async function Appointments() {
   const supabase = await createClient();
@@ -12,19 +12,19 @@ export default async function Appointments() {
   const name = data?.user?.user_metadata?.username;
 
   if (error || !data?.user) {
-    redirect('/signin');
+    redirect("/signin");
   }
 
   const { data: userInfo } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('name', name)
+    .from("professionals")
+    .select("*")
+    .eq("name", name)
     .single();
 
   const { data: appointments } = await supabase
-    .from('appointments')
-    .select('*')
-    .eq('professional_id', userInfo?.id);
+    .from("appointments")
+    .select("*")
+    .eq("professional_id", userInfo?.id);
 
   return (
     <div className="min-h-screen bg-gray-50">
