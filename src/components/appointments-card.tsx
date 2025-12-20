@@ -68,7 +68,7 @@ export default function AppointmentsCard({
         .select("*")
         .eq("professional_id", userInfo?.id)
         .eq("date", currentDate ?? today)
-        .order("date", { ascending: order !== "asc" });
+        .order("time", { ascending: order === "asc" });
 
       setAppointments(appointmentsData || []);
     } catch (error) {
