@@ -113,10 +113,10 @@ console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 10));
 // utils/check-env.ts
 export function checkEnvironment() {
   const requiredEnvs = [
-    'NEXT_PUBLIC_SUPABASE_URL',
-    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    'NEXTAUTH_SECRET',
-    'NEXTAUTH_URL',
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXTAUTH_SECRET",
+    "NEXTAUTH_URL",
   ];
 
   for (const env of requiredEnvs) {
@@ -124,8 +124,6 @@ export function checkEnvironment() {
       throw new Error(`Variável de ambiente ${env} não encontrada`);
     }
   }
-
-  console.log('✅ Todas as variáveis de ambiente estão configuradas');
 }
 ```
 
