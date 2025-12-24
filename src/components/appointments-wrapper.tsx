@@ -182,7 +182,6 @@ export default function AppointmentsWrapper({
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0 bg-white" align="end">
             <Calendar
-              mode="single"
               fromDate={new Date()}
               selected={selectedDate}
               onSelect={handleDateSelect}

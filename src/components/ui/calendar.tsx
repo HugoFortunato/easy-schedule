@@ -2,24 +2,16 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-// @ts-expect-error - types will be available after npm install
-import { DayPicker } from "react-day-picker";
+import { DayPicker, type DayPickerSingleProps } from "react-day-picker";
 import { ptBR } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = {
-  mode?: "single" | "multiple" | "range";
-  selected?: Date;
-  onSelect?: (date: Date | undefined) => void;
+export type CalendarProps = Omit<DayPickerSingleProps, "mode"> & {
   className?: string;
   classNames?: Record<string, string>;
   showOutsideDays?: boolean;
-  disabled?: (date: Date) => boolean;
-  fromDate?: Date;
-  toDate?: Date;
-  initialFocus?: boolean;
 };
 
 function Calendar({
@@ -30,6 +22,7 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
+      mode="single"
       locale={ptBR}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
