@@ -14,8 +14,6 @@ export async function doSchedule(
 
   const { data } = await supabase.auth.getUser();
 
-  console.log(data.user?.user_metadata.phone, "datoli");
-
   const date = formData.get("date") as string;
   const time = formData.get("time") as string;
   const reason = formData.get("reason") as string;
@@ -59,7 +57,8 @@ export async function doSchedule(
 
   const message = `Olá! Estou agendando meu horário para o dia ${formattedDate} às ${time}.${reason ? ` Motivo: ${reason}` : ""}`;
 
-  const professionalPhone = `55${data.user?.user_metadata.phone.replace(/\D/g, "")}`;
+  const professionalPhone =
+    `55${data.user?.user_metadata.phone}` || "5511989333434";
 
   const whatsappUrl = `https://wa.me/${professionalPhone}?text=${encodeURIComponent(message)}`;
 

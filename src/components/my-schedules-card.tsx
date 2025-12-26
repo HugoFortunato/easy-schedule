@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card, CardContent } from './ui/card';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { Card, CardContent } from "./ui/card";
+import { useRouter } from "next/navigation";
 
 export default function MySchedulesCard() {
   const router = useRouter();
 
   return (
     <Card
-      onClick={() => router.push('/appointments')}
+      onClick={() => router.push("/appointments")}
       className="cursor-pointer bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
     >
       <CardContent className="p-6">
