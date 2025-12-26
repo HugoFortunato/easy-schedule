@@ -58,7 +58,7 @@ export async function doSchedule(
   const message = `Olá! Estou agendando meu horário para o dia ${formattedDate} às ${time}.${reason ? ` Motivo: ${reason}` : ""}`;
 
   const professionalPhone =
-    `55${data.user?.user_metadata.phone}` || "5511989333434";
+    `55${data.user?.user_metadata.phone.replace(/\D/g, "")}` || "5511989333434";
 
   const whatsappUrl = `https://wa.me/${professionalPhone}?text=${encodeURIComponent(message)}`;
 
