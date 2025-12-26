@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
 
 export async function signup(
   _prevState: any,
@@ -11,9 +11,10 @@ export async function signup(
 ): Promise<any> {
   const supabase = await createClient();
 
-  const email = formData.get('email') as string;
-  const userName = formData.get('username') as string;
-  const password = formData.get('password') as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const userName = formData.get("username") as string;
+  const password = formData.get("password") as string;
 
   const { error } = await supabase.auth.signUp({
     email,
@@ -21,6 +22,7 @@ export async function signup(
     options: {
       data: {
         username: userName,
+        phone,
       },
     },
   });
@@ -33,6 +35,6 @@ export async function signup(
     };
   }
 
-  revalidatePath('/', 'layout');
-  redirect('/signin');
+  revalidatePath("/", "layout");
+  redirect("/signin");
 }

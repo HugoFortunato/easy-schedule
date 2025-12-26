@@ -1,36 +1,37 @@
-'use client';
+"use client";
 
-import React, { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
-import { Loader } from 'lucide-react';
-import Cookies from 'js-cookie';
+import React, { useState, useTransition } from "react";
+import { redirect } from "next/navigation";
+import { Loader } from "lucide-react";
+import Cookies from "js-cookie";
 
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { createActivity } from '@/app/(settings)/settings/action';
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { createActivity } from "@/app/(settings)/settings/action";
 
-function getBusinessDaysUntilNewYear(): Array<{ display: string; value: string }> {
+function getBusinessDaysUntilNewYear(): Array<{
+  display: string;
+  value: string;
+}> {
   const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
-  // Data limite: 1º de janeiro de 2026 (incluindo o dia 01/01)
-  const endDate = new Date('2026-01-01T23:59:59');
+  const endDate = new Date("2026-01-01T23:59:59");
 
   const weekDays = [
-    'Domingo',
-    'Segunda-feira',
-    'Terça-feira',
-    'Quarta-feira',
-    'Quinta-feira',
-    'Sexta-feira',
-    'Sábado',
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado",
   ];
 
   while (date <= endDate) {
     const dayOfWeek = date.getDay();
-    // Excluir domingos (dayOfWeek === 0)
     if (dayOfWeek !== 0) {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       const weekDayName = weekDays[dayOfWeek];
       const value = `${day}/${month}`;
       const display = `${day}/${month} - ${weekDayName}`;
@@ -43,27 +44,27 @@ function getBusinessDaysUntilNewYear(): Array<{ display: string; value: string }
 }
 
 const TIMES = [
-  '07:00',
-  '07:40',
-  '08:20',
-  '09:00',
-  '09:40',
-  '10:20',
-  '11:00',
-  '11:40',
-  '12:20',
-  '13:00',
-  '13:40',
-  '14:20',
-  '15:00',
-  '15:40',
-  '16:20',
-  '17:00',
-  '17:40',
-  '18:20',
-  '19:00',
-  '19:40',
-  '20:00',
+  "07:00",
+  "07:40",
+  "08:20",
+  "09:00",
+  "09:40",
+  "10:20",
+  "11:00",
+  "11:40",
+  "12:20",
+  "13:00",
+  "13:40",
+  "14:20",
+  "15:00",
+  "15:40",
+  "16:20",
+  "17:00",
+  "17:40",
+  "18:20",
+  "19:00",
+  "19:40",
+  "20:00",
 ];
 
 export type SupabaseUserResponse = {
@@ -87,7 +88,6 @@ export default function SettingsForm({
 }: {
   professionalData: SupabaseUserResponse;
 }) {
-  const { push } = useRouter();
   const [isPending, startTransition] = useTransition();
   const [availableDays, setAvailableDays] = useState<AvailableDays>({});
 
@@ -126,10 +126,10 @@ export default function SettingsForm({
         available_days: availableDays as Record<string, string[]>,
       });
 
-      Cookies.set('activity-token', activityResponse?.data?.id as string);
+      Cookies.set("activity-token", activityResponse?.data?.id as string);
     });
 
-    push('/dashboard');
+    redirect("/dashboard");
   };
 
   return (
@@ -149,8 +149,10 @@ export default function SettingsForm({
                   <Button
                     key={dayObj.value}
                     type="button"
-                    variant={selected ? 'default' : 'outline'}
-                    onClick={() => (selected ? removeDay(dayObj.value) : addDay(dayObj.value))}
+                    variant={selected ? "default" : "outline"}
+                    onClick={() =>
+                      selected ? removeDay(dayObj.value) : addDay(dayObj.value)
+                    }
                   >
                     {dayObj.display}
                   </Button>
@@ -170,7 +172,7 @@ export default function SettingsForm({
                       key={time}
                       type="button"
                       size="sm"
-                      variant={selected ? 'default' : 'outline'}
+                      variant={selected ? "default" : "outline"}
                       onClick={() => toggleTime(day, time)}
                     >
                       {time}

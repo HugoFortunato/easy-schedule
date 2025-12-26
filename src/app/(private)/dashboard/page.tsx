@@ -6,9 +6,6 @@ import ScheduleLink from "@/components/schedule-link";
 import MySchedulesCard from "@/components/my-schedules-card";
 import SettingsCard from "@/components/settings-card";
 
-// Força revalidação a cada requisição
-export const revalidate = 0;
-
 export default async function Dashboard() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 // import Image from 'next/image';
-import { LogOut, ArrowLeft } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { LogOut, ArrowLeft } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 interface HeaderProps {
   userAvatar?: string;
@@ -17,18 +17,18 @@ export function Header({ userAvatar }: HeaderProps) {
 
   const handleLogout = async () => {
     document.cookie =
-      'activity-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+      "activity-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 
-    router.push('/signin');
+    router.push("/signin");
   };
 
   const handleGoBack = () => {
     router.back();
   };
 
-  const userName = userAvatar || userAvatar?.split('@')[0] || 'Usuário';
+  const userName = userAvatar || userAvatar?.split("@")[0] || "Usuário";
 
-  const showBackButton = pathname !== '/dashboard';
+  const showBackButton = pathname !== "/dashboard";
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -43,9 +43,9 @@ export function Header({ userAvatar }: HeaderProps) {
 
           <div className="flex items-center space-x-2">
             <Image
-              src="/easyschedule-white.jpg"
-              width={200}
-              height={10}
+              src="/izi-white.png"
+              width={300}
+              height={150}
               alt="Easy Schedule"
               className=""
             />
@@ -56,7 +56,7 @@ export function Header({ userAvatar }: HeaderProps) {
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8">
               <AvatarImage
-                src={userAvatar || '/placeholder.svg'}
+                src={userAvatar || "/placeholder.svg"}
                 alt={userName}
               />
               <AvatarFallback className="bg-gray-100 text-gray-600">

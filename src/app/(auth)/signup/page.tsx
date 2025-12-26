@@ -1,5 +1,5 @@
-import SignUpForm from '@/components/signup-form';
-import Image from 'next/image';
+import SignUpForm from "@/components/signup-form";
+import Image from "next/image";
 
 export default async function RegisterPage() {
   return (
@@ -7,7 +7,7 @@ export default async function RegisterPage() {
       <div className="hidden lg:flex lg:flex-1 lg:h-full lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center space-y-8 px-12">
           <Image
-            src="/easyschedule.png"
+            src="/izi.png"
             width={400}
             height={100}
             alt="Easy Schedule"

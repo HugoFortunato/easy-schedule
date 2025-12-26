@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import ForgotPasswordForm from '@/components/forgot-password-form';
+import Image from "next/image";
+import ForgotPasswordForm from "@/components/forgot-password-form";
 
 export default async function ForgotPasswordPage() {
   return (
@@ -7,7 +7,7 @@ export default async function ForgotPasswordPage() {
       <div className="hidden lg:flex lg:flex-1 lg:h-full lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center space-y-8 px-12">
           <Image
-            src="/easyschedule.png"
+            src="/izi.png"
             width={400}
             height={100}
             alt="Easy Schedule"
@@ -24,7 +24,7 @@ export default async function ForgotPasswordPage() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="lg:hidden text-center mb-8">
             <Image
-              src="/easyschedule.png"
+              src="/izi.png"
               width={300}
               height={75}
               alt="Easy Schedule"

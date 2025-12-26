@@ -1,30 +1,33 @@
-'use client';
+"use client";
 
-import { doSchedule } from '@/app/(schedule)/schedule/[id]/action';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import React, { useActionState, useState, useEffect } from 'react';
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import React, { useActionState, useState, useEffect } from "react";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
+import { usePhoneMask } from "@/hooks/usePhoneMask";
+import { createClient } from "@/utils/supabase/client";
+import { doSchedule } from "@/app/(schedule)/schedule/[id]/action";
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Loader } from 'lucide-react';
-import { usePhoneMask } from '@/hooks/usePhoneMask';
-import { toast } from 'sonner';
-import { createClient } from '@/utils/supabase/client';
+} from "./ui/select";
 
 type Weekday =
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday'
-  | 'sunday';
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
 
 type AvailableDays = Partial<Record<Weekday, string[]>>;
 
@@ -48,25 +51,25 @@ export default function ScheduleForm({
   professionalData: ProfessionalData;
 }) {
   const weekDays = [
-    'Domingo',
-    'Segunda-feira',
-    'Terça-feira',
-    'Quarta-feira',
-    'Quinta-feira',
-    'Sexta-feira',
-    'Sábado',
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado",
   ];
 
-  const phoneMask = usePhoneMask('');
+  const phoneMask = usePhoneMask("");
   const supabase = createClient();
 
   const [form, setForm] = useState({
-    clientName: '',
-    clientPhone: '',
-    selectedDate: '',
-    selectedTime: '',
-    selectedWeekday: '',
-    reason: '',
+    clientName: "",
+    clientPhone: "",
+    selectedDate: "",
+    selectedTime: "",
+    selectedWeekday: "",
+    reason: "",
   });
   const [occupiedTimes, setOccupiedTimes] = useState<string[]>([]);
   const [state, formAction, isPending] = useActionState<
@@ -74,12 +77,12 @@ export default function ScheduleForm({
     FormData
   >(doSchedule, {
     success: false,
-    error: '',
+    error: "",
   });
 
   const getDateLabels = (day: string) => {
-    const dayNumber = day.split('/')[0];
-    const monthNumber = Number(day.split('/')[1]) - 1;
+    const dayNumber = day.split("/")[0];
+    const monthNumber = Number(day.split("/")[1]) - 1;
 
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -103,7 +106,7 @@ export default function ScheduleForm({
   };
 
   const isFutureOrTodayDate = (day: string) => {
-    const [dayNumber, monthNumber] = day.split('/').map(Number);
+    const [dayNumber, monthNumber] = day.split("/").map(Number);
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -134,17 +137,17 @@ export default function ScheduleForm({
   const fetchOccupiedTimes = async (date: string) => {
     try {
       const { data } = await supabase
-        .from('appointments')
-        .select('time')
-        .eq('professional_id', professionalId)
-        .eq('date', date);
+        .from("appointments")
+        .select("time")
+        .eq("professional_id", professionalId)
+        .eq("date", date);
 
       if (data) {
         const times = data.map((appointment) => appointment.time);
         setOccupiedTimes(times);
       }
     } catch (error) {
-      console.error('Erro ao buscar horários ocupados:', error);
+      console.error("Erro ao buscar horários ocupados:", error);
     }
   };
 
@@ -153,13 +156,11 @@ export default function ScheduleForm({
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const selectedDateObj = new Date(selectedDate);
 
-    // Se a data selecionada não é hoje, todos os horários são válidos
     if (selectedDateObj.getTime() !== today.getTime()) {
       return false;
     }
 
-    // Se é hoje, verifica se o horário já passou
-    const [hours, minutes] = time.split(':').map(Number);
+    const [hours, minutes] = time.split(":").map(Number);
     const timeDate = new Date(
       now.getFullYear(),
       now.getMonth(),
@@ -182,29 +183,28 @@ export default function ScheduleForm({
 
   useEffect(() => {
     if (state?.success) {
-      toast.success('Agendamento realizado com sucesso!', {
+      toast.success("Agendamento realizado com sucesso!", {
         description: `Seu agendamento foi confirmado para ${form.selectedDate} às ${form.selectedTime}`,
         duration: 5000,
       });
 
       if (state?.whatsappUrl) {
-        // Usa location.href para melhor compatibilidade mobile
         window.location.href = state.whatsappUrl;
       }
 
       setForm({
-        clientName: '',
-        clientPhone: '',
-        selectedDate: '',
-        selectedTime: '',
-        selectedWeekday: '',
-        reason: '',
+        clientName: "",
+        clientPhone: "",
+        selectedDate: "",
+        selectedTime: "",
+        selectedWeekday: "",
+        reason: "",
       });
       setOccupiedTimes([]);
 
-      phoneMask.setValue('');
+      phoneMask.setValue("");
     } else if (state?.error) {
-      toast.error('Erro ao realizar agendamento', {
+      toast.error("Erro ao realizar agendamento", {
         description: state.error,
         duration: 5000,
       });
@@ -215,7 +215,7 @@ export default function ScheduleForm({
   return (
     <form action={formAction} className="w-full max-w-md mx-auto p-4 space-y-4">
       <h1 className="text-xl font-bold">
-        Agendamento com {professionalData?.name || '...'}
+        Agendamento com {professionalData?.name || "..."}
       </h1>
 
       <input type="hidden" name="professional_id" value={professionalId} />
@@ -231,28 +231,27 @@ export default function ScheduleForm({
           {Object.keys(professionalData?.available_days ?? {})
             .filter((day) => isFutureOrTodayDate(day))
             .map((day) => (
-            <Button
-              id="date"
-              name="date"
-              key={day}
-              type="button"
-              variant={form.selectedWeekday === day ? 'default' : 'outline'}
-              onClick={() => {
-                  const formattedDate = `${new Date().getFullYear()}-${day.split('/')[1].padStart(2, '0')}-${day.split('/')[0].padStart(2, '0')}`;
-                setForm((prev) => ({
-                  ...prev,
-                  selectedWeekday: day,
-                  selectedTime: '',
+              <Button
+                id="date"
+                name="date"
+                key={day}
+                type="button"
+                variant={form.selectedWeekday === day ? "default" : "outline"}
+                onClick={() => {
+                  const formattedDate = `${new Date().getFullYear()}-${day.split("/")[1].padStart(2, "0")}-${day.split("/")[0].padStart(2, "0")}`;
+                  setForm((prev) => ({
+                    ...prev,
+                    selectedWeekday: day,
+                    selectedTime: "",
                     selectedDate: formattedDate,
-                }));
-                  // Busca os horários ocupados para esta data
+                  }));
                   fetchOccupiedTimes(formattedDate);
-              }}
-            >
-              {day.charAt(0).toUpperCase() + day.slice(1)} -{' '}
-              {getDateLabels(day)}
-            </Button>
-          ))}
+                }}
+              >
+                {day.charAt(0).toUpperCase() + day.slice(1)} -{" "}
+                {getDateLabels(day)}
+              </Button>
+            ))}
         </div>
       </div>
 
@@ -262,7 +261,7 @@ export default function ScheduleForm({
           <Select
             name="time"
             value={form.selectedTime}
-            onValueChange={(value) => handleChange('selectedTime', value)}
+            onValueChange={(value) => handleChange("selectedTime", value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione um horário..." />
@@ -276,10 +275,10 @@ export default function ScheduleForm({
                 .filter((time) => !occupiedTimes.includes(time))
                 .filter((time) => !isTimeInPast(time, form.selectedDate))
                 .map((time) => (
-                <SelectItem key={time} value={time}>
-                  {time}
-                </SelectItem>
-              ))}
+                  <SelectItem key={time} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
           {(
@@ -292,8 +291,8 @@ export default function ScheduleForm({
             0 && (
             <p className="text-sm text-red-500 mt-2">
               {occupiedTimes.length > 0
-                ? 'Data indisponível. Por favor, escolha outra data.'
-                : 'Não há horários disponíveis para esta data.'}
+                ? "Data indisponível. Por favor, escolha outra data."
+                : "Não há horários disponíveis para esta data."}
             </p>
           )}
         </div>
@@ -306,7 +305,7 @@ export default function ScheduleForm({
           name="client_name"
           type="text"
           value={form.clientName}
-          onChange={(e) => handleChange('clientName', e.target.value)}
+          onChange={(e) => handleChange("clientName", e.target.value)}
         />
       </div>
 
@@ -329,7 +328,7 @@ export default function ScheduleForm({
           name="reason"
           type="text"
           value={form.reason}
-          onChange={(e) => handleChange('reason', e.target.value)}
+          onChange={(e) => handleChange("reason", e.target.value)}
           placeholder="Ex: barba e cabelo"
         />
       </div>
