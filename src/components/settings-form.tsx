@@ -15,7 +15,7 @@ function getBusinessDaysUntilNewYear(): Array<{
 }> {
   const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
-  const endDate = new Date("2026-01-01T23:59:59");
+  const endDate = new Date("2026-01-31T23:59:59");
 
   const weekDays = [
     "Domingo",
