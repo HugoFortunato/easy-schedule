@@ -4,7 +4,16 @@ import { useState, useTransition } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 
 import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import AppointmentsWrapper from "./appointments-wrapper";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { deleteAppointmentsByDate } from "@/app/(private)/appointments/actions";
 
 interface Appointment {
   id: string;
@@ -25,9 +34,14 @@ export default function AppointmentsContent({
   appointments,
 }: AppointmentsContentProps) {
   const [isPending, startTransition] = useTransition();
+  const [isRemoveDayDialogOpen, setIsRemoveDayDialogOpen] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
+  const [selectedRemoveDate, setSelectedRemoveDate] = useState<
+    Date | undefined
+  >(undefined);
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
@@ -35,6 +49,14 @@ export default function AppointmentsContent({
     const formattedDate = date.toISOString().split("T")[0];
 
     setSelectedDate(formattedDate);
+  };
+
+  const handleConfirmRemoveDay = () => {
+    if (selectedRemoveDate) {
+      deleteAppointmentsByDate(selectedRemoveDate.toISOString().split("T")[0]);
+
+      setIsRemoveDayDialogOpen(false);
+    }
   };
 
   return (
@@ -51,22 +73,60 @@ export default function AppointmentsContent({
             </p>
           </div>
 
-          <Button
-            onClick={() => startTransition(() => deleteAllAppointments())}
-            variant="destructive"
-            disabled={isPending}
-            size="sm"
-            className="cursor-pointer w-[220px]"
-          >
-            {isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <>
-                <Trash2 className="w-4 h-4" />
-                Excluir agendamentos
-              </>
-            )}
-          </Button>
+          <div className="flex flex-col items-center justify-center md:flex-row gap-2">
+            <Dialog
+              open={isRemoveDayDialogOpen}
+              onOpenChange={setIsRemoveDayDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="cursor-pointer">
+                  Houve um imprevisto? Remova um dia da sua agenda!
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle className="mt-10 mb-4 text-start whitespace-nowrap text-sm font-bold">
+                    Escolha a data que você deseja remover da sua agenda:
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center px-6 pb-6">
+                  <div className="flex justify-center w-full">
+                    <Calendar
+                      selected={selectedRemoveDate}
+                      onSelect={setSelectedRemoveDate}
+                      initialFocus
+                    />
+                  </div>
+                  <Button
+                    onClick={handleConfirmRemoveDay}
+                    disabled={!selectedRemoveDate}
+                    className="mt-6 w-full"
+                    variant="default"
+                  >
+                    Confirmar
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Button
+              onClick={() => startTransition(() => deleteAllAppointments())}
+              variant="destructive"
+              disabled={isPending}
+              size="sm"
+              className="cursor-pointer w-[220px]"
+            >
+              {isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  Excluir agendamentos
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {appointments && appointments.length > 0 ? (

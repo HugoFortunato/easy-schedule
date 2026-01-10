@@ -44,6 +44,15 @@ function formatPhone(phone: string): string {
   return phone;
 }
 
+function formatDateToDayMonth(date: string | Date) {
+  const d = new Date(date);
+
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+
+  return `${day}/${month}`;
+}
+
 const AppointmentsCard = forwardRef<
   AppointmentsCardRef,
   {
@@ -79,7 +88,19 @@ const AppointmentsCard = forwardRef<
         .eq("date", currentDate ?? today)
         .order("time", { ascending: order === "asc" });
 
-      setAppointments(appointmentsData || []);
+      const { data: professional } = await supabase
+        .from("professionals")
+        .select("*")
+        .eq("name", name)
+        .single();
+
+      const formattedDate = formatDateToDayMonth(currentDate ?? today);
+
+      if (professional.available_days?.[formattedDate]) {
+        setAppointments(appointmentsData || []);
+      } else {
+        setAppointments([]);
+      }
     } catch (error) {
       console.error("Erro ao carregar agendamentos:", error);
     } finally {
