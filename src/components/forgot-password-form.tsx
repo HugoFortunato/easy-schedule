@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useActionState } from "react";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   requestPasswordReset,
   ForgotPasswordState,
-} from '@/app/(auth)/forgot-password/actions';
+} from "@/app/(auth)/forgot-password/actions";
 
 const initialState: ForgotPasswordState = {
   success: false,

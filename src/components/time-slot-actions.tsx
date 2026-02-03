@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Trash2, X } from 'lucide-react';
-import { deleteTimeSlot } from '@/app/(private)/availability/actions';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { Trash2, X } from "lucide-react";
+import { deleteTimeSlot } from "@/app/(private)/availability/actions";
+import { toast } from "sonner";
 
 interface TimeSlotActionsProps {
   date: string;
@@ -22,12 +22,12 @@ export default function TimeSlotActions({ date, time }: TimeSlotActionsProps) {
       const result = await deleteTimeSlot(date, time);
 
       if (result.success) {
-        toast.success('Horário removido com sucesso!');
+        toast.success("Horário removido com sucesso!");
       } else {
-        toast.error(result.error || 'Erro ao remover horário');
+        toast.error(result.error || "Erro ao remover horário");
       }
     } catch {
-      toast.error('Erro ao remover horário');
+      toast.error("Erro ao remover horário");
     } finally {
       setIsDeleting(false);
     }

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { format, parseISO } from 'date-fns';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { format, parseISO } from "date-fns";
 
 import {
   Select,
@@ -10,10 +10,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { toast } from 'sonner';
-import { updateAppointment } from '@/app/(private)/appointments/actions';
-import { Edit, Save, X, MessageCircle } from 'lucide-react';
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { updateAppointment } from "@/app/(private)/appointments/actions";
+import { Edit, Save, X, MessageCircle } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -31,30 +31,30 @@ interface EditAppointmentCardProps {
 }
 
 const TIMES = [
-  '08:00',
-  '08:30',
-  '09:00',
-  '09:30',
-  '10:00',
-  '10:30',
-  '11:00',
-  '11:30',
-  '12:00',
-  '12:30',
-  '13:00',
-  '13:30',
-  '14:00',
-  '14:30',
-  '15:00',
-  '15:30',
-  '16:00',
-  '16:30',
-  '17:00',
-  '17:30',
-  '18:00',
-  '18:30',
-  '19:00',
-  '19:30',
+  "08:00",
+  "08:30",
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
 ];
 
 export default function EditAppointmentCard({
@@ -76,20 +76,20 @@ export default function EditAppointmentCard({
       const result = await updateAppointment(appointment.id, editedTime);
 
       if (result.success) {
-        toast.success('Horário atualizado com sucesso!', {
+        toast.success("Horário atualizado com sucesso!", {
           description: `Novo horário: ${editedTime}`,
         });
 
         setIsEditing(false);
         onUpdate();
       } else {
-        toast.error('Erro ao atualizar horário', {
-          description: result.error || 'Tente novamente em alguns instantes.',
+        toast.error("Erro ao atualizar horário", {
+          description: result.error || "Tente novamente em alguns instantes.",
         });
       }
     } catch {
-      toast.error('Erro ao atualizar horário', {
-        description: 'Tente novamente em alguns instantes.',
+      toast.error("Erro ao atualizar horário", {
+        description: "Tente novamente em alguns instantes.",
       });
     } finally {
       setIsLoading(false);
@@ -102,11 +102,11 @@ export default function EditAppointmentCard({
   };
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = appointment.client_phone.replace(/\D/g, '');
-    const formattedDate = format(parseISO(appointment.date), 'dd/MM/yyyy');
+    const phoneNumber = appointment.client_phone.replace(/\D/g, "");
+    const formattedDate = format(parseISO(appointment.date), "dd/MM/yyyy");
     const message = `Olá ${appointment.client_name}! 👋\n\nSeu agendamento foi alterado:\n📅 Data: ${formattedDate}\n🕐 Novo horário: ${editedTime}\n\nPor favor, confirme se este novo horário está adequado para você.\n\nObrigado! 😊`;
     const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
   };
 
   return (

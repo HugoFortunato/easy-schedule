@@ -27,11 +27,7 @@ interface DialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-function Dialog({
-  children,
-  open: controlledOpen,
-  onOpenChange,
-}: DialogProps) {
+function Dialog({ children, open: controlledOpen, onOpenChange }: DialogProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
 
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
@@ -93,11 +89,7 @@ interface DialogContentProps {
   onClose?: () => void;
 }
 
-function DialogContent({
-  children,
-  className,
-  onClose,
-}: DialogContentProps) {
+function DialogContent({ children, className, onClose }: DialogContentProps) {
   const { open, setOpen } = useDialog();
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -173,7 +165,10 @@ interface DialogHeaderProps {
 function DialogHeader({ children, className }: DialogHeaderProps) {
   return (
     <div
-      className={cn("flex flex-col space-y-1.5 text-center sm:text-left px-6 pt-6", className)}
+      className={cn(
+        "flex flex-col space-y-1.5 text-center sm:text-left px-6 pt-6",
+        className
+      )}
     >
       {children}
     </div>
@@ -188,7 +183,10 @@ interface DialogTitleProps {
 function DialogTitle({ children, className }: DialogTitleProps) {
   return (
     <h2
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+      className={cn(
+        "text-lg font-semibold leading-none tracking-tight",
+        className
+      )}
     >
       {children}
     </h2>
@@ -201,9 +199,7 @@ interface DialogDescriptionProps {
 }
 
 function DialogDescription({ children, className }: DialogDescriptionProps) {
-  return (
-    <p className={cn("text-sm text-gray-500", className)}>{children}</p>
-  );
+  return <p className={cn("text-sm text-gray-500", className)}>{children}</p>;
 }
 
 export {
@@ -214,4 +210,3 @@ export {
   DialogTitle,
   DialogDescription,
 };
-

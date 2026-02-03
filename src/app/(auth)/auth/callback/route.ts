@@ -1,9 +1,9 @@
-import { createClient } from '@/utils/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const code = requestUrl.searchParams.get("code");
   const origin = requestUrl.origin;
 
   if (code) {
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
-      console.error('Erro ao trocar code por sessão:', error);
+      console.error("Erro ao trocar code por sessão:", error);
       return NextResponse.redirect(`${origin}/signin?error=auth_error`);
     }
 

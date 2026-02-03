@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from "@/utils/supabase/server";
 
 type AvailableDays = Record<string, string[]>;
 
@@ -28,7 +28,7 @@ export async function createActivity({
   const supabase = await createClient();
 
   const { error, data } = await supabase
-    .from('professionals')
+    .from("professionals")
     .insert({
       name,
       email,
@@ -37,7 +37,7 @@ export async function createActivity({
     .select();
 
   if (error) {
-    return { error: 'Erro ao criar disponibilidade. Tente novamente.' };
+    return { error: "Erro ao criar disponibilidade. Tente novamente." };
   }
 
   return { success: true, data: data[0] };

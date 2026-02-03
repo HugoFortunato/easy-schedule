@@ -1,6 +1,6 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 type CookieToSet = {
   name: string;
@@ -25,7 +25,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            console.log('error');
+            console.log("error");
           }
         },
       },

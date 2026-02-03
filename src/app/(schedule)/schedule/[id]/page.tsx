@@ -1,5 +1,5 @@
-import ScheduleForm from '@/components/schedule-form';
-import { createClient } from '@/utils/supabase/server';
+import ScheduleForm from "@/components/schedule-form";
+import { createClient } from "@/utils/supabase/server";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -10,9 +10,9 @@ export default async function SchedulePage({ params }: PageProps) {
   const { id } = (await params) as { id: string };
 
   const { data } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('id', id)
+    .from("professionals")
+    .select("*")
+    .eq("id", id)
     .single();
 
   return (

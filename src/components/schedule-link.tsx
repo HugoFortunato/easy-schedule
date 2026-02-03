@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent } from './ui/card';
-import { Button } from './ui/button';
+import React, { useState } from "react";
+import { Card, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
 
 interface ScheduleLinkProps {
   activityToken: string;
@@ -54,7 +54,7 @@ export default function ScheduleLink({ activityToken }: ScheduleLinkProps) {
                     d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
-                {isCopied ? 'Copiado' : 'Copiar'}
+                {isCopied ? "Copiado" : "Copiar"}
               </Button>
             </div>
           </div>

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   resetPassword,
   ResetPasswordState,
-} from '@/app/(auth)/reset-password/actions';
-import { useActionState } from 'react';
-import { AlertCircle } from 'lucide-react';
+} from "@/app/(auth)/reset-password/actions";
+import { useActionState } from "react";
+import { AlertCircle } from "lucide-react";
 
 const initialState: ResetPasswordState = {
   success: false,

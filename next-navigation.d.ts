@@ -1,4 +1,4 @@
-declare module 'next/navigation' {
+declare module "next/navigation" {
   export function redirect(path: string): never;
   export function permanentRedirect(path: string): never;
   export function useRouter(): {
@@ -12,4 +12,3 @@ declare module 'next/navigation' {
   export function usePathname(): string;
   export function useSearchParams(): URLSearchParams;
 }
-

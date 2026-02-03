@@ -1,14 +1,14 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/utils/supabase/server';
-import ChangePasswordForm from '@/components/change-password-form';
+import React from "react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import ChangePasswordForm from "@/components/change-password-form";
 
 export default async function ChangePasswordPage() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {
-    redirect('/signin');
+    redirect("/signin");
   }
 
   return (

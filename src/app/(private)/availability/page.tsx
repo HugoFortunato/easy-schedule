@@ -1,37 +1,37 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
+import React from "react";
+import { redirect } from "next/navigation";
 
-import { createClient } from '@/utils/supabase/server';
-import AvailabilityContent from './availability-content';
+import { createClient } from "@/utils/supabase/server";
+import AvailabilityContent from "./availability-content";
 
 export default async function Availability() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {
-    redirect('/signin');
+    redirect("/signin");
   }
 
   const name = data?.user?.user_metadata?.username;
 
   const { data: userInfo } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('name', name)
+    .from("professionals")
+    .select("*")
+    .eq("name", name)
     .single();
 
   const available_days_raw = userInfo?.available_days;
 
   let available_days: Record<string, string[]> = {};
 
-  if (typeof available_days_raw === 'string') {
+  if (typeof available_days_raw === "string") {
     try {
       available_days = JSON.parse(available_days_raw);
     } catch {
       available_days = {};
     }
   } else if (
-    typeof available_days_raw === 'object' &&
+    typeof available_days_raw === "object" &&
     available_days_raw !== null
   ) {
     available_days = available_days_raw as Record<string, string[]>;
@@ -45,8 +45,8 @@ export default async function Availability() {
   );
 
   const sortedDates = availableDates.sort((a, b) => {
-    const [dayA, monthA] = a.split('/').map(Number);
-    const [dayB, monthB] = b.split('/').map(Number);
+    const [dayA, monthA] = a.split("/").map(Number);
+    const [dayB, monthB] = b.split("/").map(Number);
 
     if (monthA !== monthB) {
       return monthA - monthB;

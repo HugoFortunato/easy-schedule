@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Clock } from 'lucide-react';
-import TimeSlotActions from '@/components/time-slot-actions';
+import React from "react";
+import { Clock } from "lucide-react";
+import TimeSlotActions from "@/components/time-slot-actions";
 
 const weekDays = [
-  'Domingo',
-  'Segunda-feira',
-  'Terça-feira',
-  'Quarta-feira',
-  'Quinta-feira',
-  'Sexta-feira',
-  'Sábado',
+  "Domingo",
+  "Segunda-feira",
+  "Terça-feira",
+  "Quarta-feira",
+  "Quinta-feira",
+  "Sexta-feira",
+  "Sábado",
 ];
 
 interface AvailabilityContentProps {
@@ -24,8 +24,8 @@ export default function AvailabilityContent({
   sortedDates,
 }: AvailabilityContentProps) {
   const getDateLabels = (day: string) => {
-    const dayNumber = day.split('/')[0];
-    const monthNumber = Number(day.split('/')[1]) - 1;
+    const dayNumber = day.split("/")[0];
+    const monthNumber = Number(day.split("/")[1]) - 1;
 
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -100,8 +100,8 @@ export default function AvailabilityContent({
 
             <div className="mt-4 pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                {times.length} horário{times.length !== 1 ? 's' : ''} disponível
-                {times.length !== 1 ? 'is' : ''}
+                {times.length} horário{times.length !== 1 ? "s" : ""} disponível
+                {times.length !== 1 ? "is" : ""}
               </p>
             </div>
           </div>

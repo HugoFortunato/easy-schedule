@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-export function usePhoneMask(initialValue: string = '') {
+export function usePhoneMask(initialValue: string = "") {
   const [value, setValue] = useState(initialValue);
 
   const formatPhone = useCallback((input: string) => {
     // Remove todos os caracteres não numéricos
-    const numbers = input.replace(/\D/g, '');
+    const numbers = input.replace(/\D/g, "");
 
     // Aplica a máscara baseada no tamanho
     if (numbers.length <= 2) {
@@ -32,7 +32,7 @@ export function usePhoneMask(initialValue: string = '') {
   );
 
   const getUnmaskedValue = useCallback(() => {
-    return value.replace(/\D/g, '');
+    return value.replace(/\D/g, "");
   }, [value]);
 
   return {

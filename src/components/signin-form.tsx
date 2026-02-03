@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useActionState } from 'react';
-import { Card, CardContent } from './ui/card';
-import { Label } from './ui/label';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { AlertDescription } from './ui/alert';
-import { Loader, MessageCircle } from 'lucide-react';
-import { signin } from '@/app/(auth)/signin/actions';
-import { initialState } from '@/types/initialState';
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
+import React, { useActionState } from "react";
+import { Card, CardContent } from "./ui/card";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { AlertDescription } from "./ui/alert";
+import { Loader, MessageCircle } from "lucide-react";
+import { signin } from "@/app/(auth)/signin/actions";
+import { initialState } from "@/types/initialState";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default function SignInForm() {
   const [state, formAction, isPending] = useActionState(signin, initialState);
@@ -91,7 +91,7 @@ export default function SignInForm() {
                 type="button"
                 className="w-full"
                 variant="ghost"
-                onClick={() => redirect('/signup')}
+                onClick={() => redirect("/signup")}
               >
                 Criar nova conta
               </Button>

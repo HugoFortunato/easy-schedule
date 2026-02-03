@@ -122,7 +122,7 @@ frontend:
   artifacts:
     baseDirectory: .next
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
       - node_modules/**/*
@@ -192,9 +192,9 @@ docker run -p 3000:3000 easy-schedule
 ```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // Para Docker
+  output: "standalone", // Para Docker
   images: {
-    domains: ['your-domain.com'],
+    domains: ["your-domain.com"],
   },
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
@@ -284,11 +284,11 @@ npm run build
 
 ```javascript
 // Lazy loading
-import dynamic from 'next/dynamic';
-const Component = dynamic(() => import('./Component'));
+import dynamic from "next/dynamic";
+const Component = dynamic(() => import("./Component"));
 
 // Image optimization
-import Image from 'next/image';
+import Image from "next/image";
 <Image src="/image.jpg" width={500} height={300} alt="Description" />;
 ```
 

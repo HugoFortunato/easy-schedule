@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Button } from './ui/button';
-import { redirect } from 'next/navigation';
+import React from "react";
+import { Button } from "./ui/button";
+import { redirect } from "next/navigation";
 
 export default function RedirectToSettingsButton() {
-  return <Button onClick={() => redirect('/settings')}>configurações</Button>;
+  return <Button onClick={() => redirect("/settings")}>configurações</Button>;
 }

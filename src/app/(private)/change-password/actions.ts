@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export type ChangePasswordState = {
   success: boolean;
@@ -15,9 +15,9 @@ export async function changePassword(
 ): Promise<ChangePasswordState> {
   const supabase = await createClient();
 
-  const currentPassword = formData.get('currentPassword') as string;
-  const newPassword = formData.get('newPassword') as string;
-  const confirmPassword = formData.get('confirmPassword') as string;
+  const currentPassword = formData.get("currentPassword") as string;
+  const newPassword = formData.get("newPassword") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
 
   // Verificar se o usuário está autenticado
   const {
@@ -27,7 +27,7 @@ export async function changePassword(
   if (!user) {
     return {
       success: false,
-      error: 'Usuário não autenticado',
+      error: "Usuário não autenticado",
     };
   }
 
@@ -35,7 +35,7 @@ export async function changePassword(
   if (newPassword !== confirmPassword) {
     return {
       success: false,
-      error: 'As senhas não coincidem.',
+      error: "As senhas não coincidem.",
     };
   }
 
@@ -43,7 +43,7 @@ export async function changePassword(
   if (newPassword.length < 6) {
     return {
       success: false,
-      error: 'A senha deve ter no mínimo 6 caracteres.',
+      error: "A senha deve ter no mínimo 6 caracteres.",
     };
   }
 
@@ -56,7 +56,7 @@ export async function changePassword(
   if (signInError) {
     return {
       success: false,
-      error: 'Senha atual incorreta.',
+      error: "Senha atual incorreta.",
     };
   }
 
@@ -72,5 +72,5 @@ export async function changePassword(
     };
   }
 
-  redirect('/dashboard?success=password_changed');
+  redirect("/dashboard?success=password_changed");
 }

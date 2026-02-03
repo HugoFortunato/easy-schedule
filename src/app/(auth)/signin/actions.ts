@@ -1,9 +1,9 @@
-'use server';
+"use server";
 
-import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
-import { createClient } from '@/utils/supabase/server';
-import { SignInState } from '@/types/initialState';
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/utils/supabase/server";
+import { SignInState } from "@/types/initialState";
 
 export async function signin(
   _prevState: SignInState,
@@ -11,8 +11,8 @@ export async function signin(
 ): Promise<SignInState> {
   const supabase = await createClient();
 
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -27,6 +27,6 @@ export async function signin(
     };
   }
 
-  revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  revalidatePath("/", "layout");
+  redirect("/dashboard");
 }

@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import { createClient } from '@/utils/supabase/server';
-import { revalidatePath } from 'next/cache';
+import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function deleteTimeSlot(
   date: string,
@@ -18,31 +18,31 @@ export async function deleteTimeSlot(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return { success: false, error: 'Usuário não autenticado' };
+    return { success: false, error: "Usuário não autenticado" };
   }
 
   const { data: professional } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('email', user.email)
+    .from("professionals")
+    .select("*")
+    .eq("email", user.email)
     .single();
 
   if (!professional) {
-    return { success: false, error: 'Profissional não encontrado' };
+    return { success: false, error: "Profissional não encontrado" };
   }
 
   const available_days_raw = professional.available_days;
 
   let available_days: Record<string, string[]> = {};
 
-  if (typeof available_days_raw === 'string') {
+  if (typeof available_days_raw === "string") {
     try {
       available_days = JSON.parse(available_days_raw);
     } catch {
       available_days = {};
     }
   } else if (
-    typeof available_days_raw === 'object' &&
+    typeof available_days_raw === "object" &&
     available_days_raw !== null
   ) {
     available_days = available_days_raw as Record<string, string[]>;
@@ -60,16 +60,16 @@ export async function deleteTimeSlot(
   }
 
   const { error } = await supabase
-    .from('professionals')
+    .from("professionals")
     .update({ available_days: updatedDays })
-    .eq('id', professional.id);
+    .eq("id", professional.id);
 
   if (error) {
-    return { success: false, error: 'Erro ao atualizar disponibilidade' };
+    return { success: false, error: "Erro ao atualizar disponibilidade" };
   }
 
-  revalidatePath('/availability');
-  revalidatePath('/dashboard');
+  revalidatePath("/availability");
+  revalidatePath("/dashboard");
 
   return { success: true };
 }
@@ -90,31 +90,31 @@ export async function updateTimeSlot(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return { success: false, error: 'Usuário não autenticado' };
+    return { success: false, error: "Usuário não autenticado" };
   }
 
   const { data: professional } = await supabase
-    .from('professionals')
-    .select('*')
-    .eq('email', user.email)
+    .from("professionals")
+    .select("*")
+    .eq("email", user.email)
     .single();
 
   if (!professional) {
-    return { success: false, error: 'Profissional não encontrado' };
+    return { success: false, error: "Profissional não encontrado" };
   }
 
   const available_days_raw = professional.available_days;
 
   let available_days: Record<string, string[]> = {};
 
-  if (typeof available_days_raw === 'string') {
+  if (typeof available_days_raw === "string") {
     try {
       available_days = JSON.parse(available_days_raw);
     } catch {
       available_days = {};
     }
   } else if (
-    typeof available_days_raw === 'object' &&
+    typeof available_days_raw === "object" &&
     available_days_raw !== null
   ) {
     available_days = available_days_raw as Record<string, string[]>;
@@ -128,16 +128,16 @@ export async function updateTimeSlot(
   }
 
   const { error } = await supabase
-    .from('professionals')
+    .from("professionals")
     .update({ available_days })
-    .eq('id', professional.id);
+    .eq("id", professional.id);
 
   if (error) {
-    return { success: false, error: 'Erro ao atualizar disponibilidade' };
+    return { success: false, error: "Erro ao atualizar disponibilidade" };
   }
 
-  revalidatePath('/availability');
-  revalidatePath('/dashboard');
+  revalidatePath("/availability");
+  revalidatePath("/dashboard");
 
   return { success: true };
 }

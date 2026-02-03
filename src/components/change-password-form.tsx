@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   changePassword,
   ChangePasswordState,
-} from '@/app/(private)/change-password/actions';
-import { useActionState } from 'react';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+} from "@/app/(private)/change-password/actions";
+import { useActionState } from "react";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 const initialState: ChangePasswordState = {
   success: false,
@@ -78,7 +78,7 @@ export default function ChangePasswordForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? 'Alterando...' : 'Alterar senha'}
+        {isPending ? "Alterando..." : "Alterar senha"}
       </Button>
     </form>
   );

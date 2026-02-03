@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export type ResetPasswordState = {
   success: boolean;
@@ -23,28 +23,28 @@ export async function resetPassword(
     return {
       success: false,
       message:
-        'Sessão inválida. Por favor, solicite um novo link de recuperação.',
+        "Sessão inválida. Por favor, solicite um novo link de recuperação.",
       error:
-        'Sessão inválida. Por favor, solicite um novo link de recuperação.',
+        "Sessão inválida. Por favor, solicite um novo link de recuperação.",
     };
   }
 
-  const password = formData.get('password') as string;
-  const confirmPassword = formData.get('confirmPassword') as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
 
   if (password !== confirmPassword) {
     return {
       success: false,
-      message: 'As senhas não coincidem.',
-      error: 'As senhas não coincidem.',
+      message: "As senhas não coincidem.",
+      error: "As senhas não coincidem.",
     };
   }
 
   if (password.length < 6) {
     return {
       success: false,
-      message: 'A senha deve ter no mínimo 6 caracteres.',
-      error: 'A senha deve ter no mínimo 6 caracteres.',
+      message: "A senha deve ter no mínimo 6 caracteres.",
+      error: "A senha deve ter no mínimo 6 caracteres.",
     };
   }
 
@@ -60,5 +60,5 @@ export async function resetPassword(
     };
   }
 
-  redirect('/signin?success=password_reset');
+  redirect("/signin?success=password_reset");
 }
