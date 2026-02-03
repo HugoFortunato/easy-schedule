@@ -15,7 +15,8 @@ function getBusinessDaysUntilNewYear(): Array<{
 }> {
   const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
-  const endDate = new Date("2026-02-31T23:59:59");
+  // TODO: Change to the actual end date
+  const endDate = new Date("2026-02-28T23:59:59");
 
   const weekDays = [
     "Domingo",
@@ -133,16 +134,16 @@ export default function SettingsForm({
   };
 
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto p-4 py-8">
+    <div className="min-h-screen w-full max-w-md mx-auto p-4 py-8 overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-6">
         <h1 className="text-2xl md:text-4xl font-bold text-center">
           Crie sua disponibilidade semanal
         </h1>
 
         <div className="gap-10 w-full flex flex-col items-center justify-center">
-          <div className="space-y-2 mt-4">
+          <div className="space-y-2 mt-4 w-full">
             <Label>Dias disponíveis</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 w-full">
               {AVAILABLE_DATES.map((dayObj) => {
                 const selected = dayObj.value in availableDays;
                 return (
