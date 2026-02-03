@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
 
@@ -89,8 +89,10 @@ export default function SettingsForm({
 }: {
   professionalData: SupabaseUserResponse;
 }) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [availableDays, setAvailableDays] = useState<AvailableDays>({});
+  const [error, setError] = useState<string | null>(null);
 
   const AVAILABLE_DATES = getBusinessDaysUntilNewYear();
 
@@ -120,6 +122,18 @@ export default function SettingsForm({
   };
 
   const handleSubmit = async () => {
+    setError(null);
+
+    // Validar se há pelo menos um dia com horários selecionados
+    const daysWithTimes = Object.entries(availableDays).filter(
+      ([, times]) => times && times.length > 0
+    );
+
+    if (daysWithTimes.length === 0) {
+      setError("Selecione pelo menos um dia e seus horários disponíveis");
+      return;
+    }
+
     startTransition(async () => {
       const activityResponse = await createActivity({
         name: professionalData.user.user_metadata.username,
@@ -127,10 +141,13 @@ export default function SettingsForm({
         available_days: availableDays as Record<string, string[]>,
       });
 
-      Cookies.set("activity-token", activityResponse?.data?.id as string);
+      if (activityResponse.success && activityResponse.data) {
+        Cookies.set("activity-token", activityResponse.data.id);
+        router.push("/dashboard");
+      } else {
+        setError(activityResponse.error || "Erro ao salvar disponibilidade");
+      }
     });
-
-    redirect("/dashboard");
   };
 
   return (
@@ -191,8 +208,16 @@ export default function SettingsForm({
           value={JSON.stringify(availableDays)}
         />
 
-        <Button type="button" onClick={handleSubmit} className="w-full">
-          {isPending && <Loader className="animate-spin" />}
+        {error && (
+          <div className="text-red-500 text-sm text-center">{error}</div>
+        )}
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          className="w-full"
+          disabled={isPending}
+        >
+          {isPending && <Loader className="animate-spin mr-2" />}
           Salvar disponibilidade
         </Button>
       </div>
