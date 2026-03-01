@@ -16,7 +16,7 @@ function getBusinessDaysUntilNewYear(): Array<{
   const result: Array<{ display: string; value: string }> = [];
   const date = new Date();
   // TODO: Change to the actual end date
-  const endDate = new Date("2026-02-28T23:59:59");
+  const endDate = new Date("2026-03-31T23:59:59");
 
   const weekDays = [
     "Domingo",
@@ -45,26 +45,24 @@ function getBusinessDaysUntilNewYear(): Array<{
 }
 
 const TIMES = [
-  "07:00",
-  "07:40",
-  "08:20",
-  "09:00",
-  "09:40",
-  "10:20",
-  "11:00",
-  "11:40",
-  "12:20",
-  "13:00",
-  "13:40",
-  "14:20",
-  "15:00",
-  "15:40",
-  "16:20",
-  "17:00",
-  "17:40",
-  "18:20",
-  "19:00",
-  "19:40",
+  "08:00",
+  "08:40",
+  "09:20",
+  "10:00",
+  "10:40",
+  "11:20",
+  "12:00",
+  "12:40",
+  "13:20",
+  "14:00",
+  "14:40",
+  "15:20",
+  "16:00",
+  "16:40",
+  "17:20",
+  "18:00",
+  "18:40",
+  "19:20",
   "20:00",
 ];
 
@@ -124,7 +122,6 @@ export default function SettingsForm({
   const handleSubmit = async () => {
     setError(null);
 
-    // Validar se há pelo menos um dia com horários selecionados
     const daysWithTimes = Object.entries(availableDays).filter(
       ([, times]) => times && times.length > 0
     );
