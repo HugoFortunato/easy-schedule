@@ -18,6 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+  // comentário
 }>) {
   const { locale } = await params;
   return (
