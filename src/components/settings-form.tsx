@@ -4,19 +4,25 @@ import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { createActivity } from "@/app/(settings)/settings/action";
+import { Calendar } from "./ui/calendar";
+import { format } from "date-fns";
 
-function getBusinessDaysUntilNewYear(): Array<{
+function getBusinessDaysUntilEndDate(endDate?: Date): Array<{
   display: string;
   value: string;
 }> {
-  const result: Array<{ display: string; value: string }> = [];
+  if (!endDate) {
+    return [];
+  }
+
   const date = new Date();
-  // TODO: Change to the actual end date
-  const endDate = new Date("2026-03-31T23:59:59");
+  const result: Array<{ display: string; value: string }> = [];
+  const limitDate = new Date(endDate);
 
   const weekDays = [
     "Domingo",
@@ -28,7 +34,7 @@ function getBusinessDaysUntilNewYear(): Array<{
     "Sábado",
   ];
 
-  while (date <= endDate) {
+  while (date <= limitDate) {
     const dayOfWeek = date.getDay();
     if (dayOfWeek !== 0) {
       const day = String(date.getDate()).padStart(2, "0");
@@ -89,10 +95,34 @@ export default function SettingsForm({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [availableDays, setAvailableDays] = useState<AvailableDays>({});
   const [error, setError] = useState<string | null>(null);
+  const [availableDays, setAvailableDays] = useState<AvailableDays>({});
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
-  const AVAILABLE_DATES = getBusinessDaysUntilNewYear();
+  const AVAILABLE_DATES = getBusinessDaysUntilEndDate(endDate);
+
+  const handleEndDateSelect = (selectedDate?: Date) => {
+    if (!selectedDate) {
+      setEndDate(undefined);
+      return;
+    }
+
+    const normalizedEndDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      23,
+      59,
+      59
+    );
+
+    const formattedEndDate = format(selectedDate, "dd/MM/yyyy");
+    setEndDate(normalizedEndDate);
+
+    toast.success("Último dia da agenda selecionado!", {
+      description: `Até ${formattedEndDate}`,
+    });
+  };
 
   const addDay = (day: DayKey) => {
     setAvailableDays((prev) => ({
@@ -154,49 +184,75 @@ export default function SettingsForm({
           Crie sua disponibilidade semanal
         </h1>
 
-        <div className="gap-10 w-full flex flex-col items-center justify-center">
-          <div className="space-y-2 mt-4 w-full">
-            <Label>Dias disponíveis</Label>
-            <div className="grid grid-cols-2 gap-2 w-full">
-              {AVAILABLE_DATES.map((dayObj) => {
-                const selected = dayObj.value in availableDays;
-                return (
-                  <Button
-                    key={dayObj.value}
-                    type="button"
-                    variant={selected ? "default" : "outline"}
-                    onClick={() =>
-                      selected ? removeDay(dayObj.value) : addDay(dayObj.value)
-                    }
-                  >
-                    {dayObj.display}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
+        <div
+          className={`flex flex-col items-center justify-center w-full overflow-hidden transition-all duration-500 ease-out ${
+            endDate
+              ? "max-h-0 opacity-0 -translate-y-2"
+              : "max-h-[420px] opacity-100 translate-y-0"
+          }`}
+        >
+          <Label>Selecione o último dia da sua agenda</Label>
+          <Calendar fromDate={new Date()} onDayClick={handleEndDateSelect} />
+        </div>
 
-          {Object.entries(availableDays).map(([day, times]) => (
-            <div key={day} className="space-y-2">
-              <Label>Horários para {day}</Label>
-              <div className="flex flex-wrap gap-2">
-                {TIMES.map((time) => {
-                  const selected = times?.includes(time);
+        <div
+          className={`w-full overflow-hidden transition-all duration-500 ease-out ${
+            endDate
+              ? "max-h-[3000px] opacity-100 translate-y-0"
+              : "max-h-0 opacity-0 translate-y-2"
+          }`}
+        >
+          {endDate && (
+            <p className="text-xs text-muted-foreground mb-3">
+              Último dia da agenda: {format(endDate, "dd/MM/yyyy")}
+            </p>
+          )}
+          <div className="gap-10 w-full flex flex-col items-center justify-center">
+            <div className="space-y-2 mt-4 w-full">
+              <Label>Dias disponíveis</Label>
+              <div className="grid grid-cols-2 gap-2 w-full">
+                {AVAILABLE_DATES.map((dayObj) => {
+                  const selected = dayObj.value in availableDays;
                   return (
                     <Button
-                      key={time}
+                      key={dayObj.value}
                       type="button"
-                      size="sm"
                       variant={selected ? "default" : "outline"}
-                      onClick={() => toggleTime(day, time)}
+                      onClick={() =>
+                        selected
+                          ? removeDay(dayObj.value)
+                          : addDay(dayObj.value)
+                      }
                     >
-                      {time}
+                      {dayObj.display}
                     </Button>
                   );
                 })}
               </div>
             </div>
-          ))}
+
+            {Object.entries(availableDays).map(([day, times]) => (
+              <div key={day} className="space-y-2">
+                <Label>Horários para {day}</Label>
+                <div className="flex flex-wrap gap-2">
+                  {TIMES.map((time) => {
+                    const selected = times?.includes(time);
+                    return (
+                      <Button
+                        key={time}
+                        type="button"
+                        size="sm"
+                        variant={selected ? "default" : "outline"}
+                        onClick={() => toggleTime(day, time)}
+                      >
+                        {time}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <input
@@ -208,15 +264,18 @@ export default function SettingsForm({
         {error && (
           <div className="text-red-500 text-sm text-center">{error}</div>
         )}
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          className="w-full"
-          disabled={isPending}
-        >
-          {isPending && <Loader className="animate-spin mr-2" />}
-          Salvar disponibilidade
-        </Button>
+
+        {endDate && (
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            className="w-full"
+            disabled={isPending}
+          >
+            {isPending && <Loader className="animate-spin mr-2" />}
+            Salvar disponibilidade
+          </Button>
+        )}
       </div>
     </div>
   );

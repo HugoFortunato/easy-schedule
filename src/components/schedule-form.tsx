@@ -274,6 +274,7 @@ export default function ScheduleForm({
               )
                 .filter((time) => !occupiedTimes.includes(time))
                 .filter((time) => !isTimeInPast(time, form.selectedDate))
+                .sort((a, b) => a.localeCompare(b))
                 .map((time) => (
                   <SelectItem key={time} value={time}>
                     {time}
